@@ -1,11 +1,30 @@
-import { useState } from "react"
+import { useEffect, useState } from "react";
 
-export default function Counter () {
+interface CounterProps {
+    min: number;
+    max: number;
+    defaultValue: number;
+    onChange: (value: number) => void;
+}
 
-    const [value, setValue] = useState(0) 
+export default function Counter ({ min, max, defaultValue, onChange }: CounterProps) {
 
-    const increment = () => setValue(value + 1)
-    const decrement = () => setValue(value - 1)
+    const [value, setValue] = useState<number>(defaultValue);
+
+    const increment = () => {
+        if (value < max) {
+            setValue(value + .5);
+        }
+    };
+    const decrement = () => {
+        if (value > min) {
+            setValue(value - .5);
+        }
+    };
+
+    useEffect(() => {
+        onChange(value);
+    }, [value])
 
     return (
         <>
@@ -13,14 +32,13 @@ export default function Counter () {
                 <button className="input-number-decrement w-8 bg-gold rounded-sm" type="button" onClick={decrement}>–</button>
                 <input
                     id="input-price-guess"
-                    className="h-full w-14 px-4 shadow-sm sm:text-sm bg-dim-gray"
+                    className="h-full w-20 px-4 shadow-sm sm:text-sm bg-dim-gray"
                     type="text"
-                    value={value} min="0" max="1000"
+                    value={value.toFixed(2)}
                     autoComplete="off"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
-                    step=".1"
                     style={{
                         textAlign: 'center'
                     }}
