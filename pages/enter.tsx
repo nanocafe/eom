@@ -3,15 +3,33 @@ import Navbar from 'components/Navbar'
 import Link from 'next/link'
 import Counter from 'components/Counter'
 import api from 'services/api'
+import { useState } from 'react'
+import { validateNanoAddress, validateNickname, validatePrice } from 'utils/validate'
 
 export default function Home() {
 
-    const postGuess = () => {
-        api.post('saveGuess', {
-            data: 1
-        })
-        .then(alert)
-        .catch(alert)
+    const [price, setPrice] = useState<number>(0);
+    const [nickname, setNickname] = useState<string>('');
+    const [address, setAddress] = useState<string>('');
+
+    const postGuess = async () => {
+
+        try {
+
+            validatePrice(price);
+            validateNickname(nickname);
+            validateNanoAddress(address);
+
+            const response = await api.post('/guesses/create', {
+                price,
+                nickname,
+                address
+            })
+            console.log('response', response);
+        } catch (err) {
+            alert("Error: " + err);
+        }
+
     }
 
 
@@ -38,69 +56,73 @@ export default function Home() {
 
                     <div className="mt-5 md:mt-0">
 
-                        <form action="#" method="POST">
+                        <div className="shadow overflow-hidden sm:rounded-md">
+                            <div className="px-4 py-5 sm:p-6" style={{
+                                backgroundColor: "#3e3e3e"
+                            }}>
 
-                            <div className="shadow overflow-hidden sm:rounded-md">
-                                <div className="px-4 py-5 sm:p-6" style={{
-                                    backgroundColor: "#3e3e3e"
-                                }}>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <div className="col-span-1">
+                                        <label htmlFor="first-name" className="block text-sm font-medium text-gray-100">
+                                            Price Guess (USDT)
+                                        </label>
 
-                                    <div className="grid grid-cols-3 gap-3">
-                                        <div className="col-span-1">
-                                            <label htmlFor="first-name" className="block text-sm font-medium text-gray-100">
-                                                Price Guess (USDT)
-                                            </label>
-
-                                            <Counter />
-
-                                        </div>
-
-                                        <div className="col-span-2">
-                                            <label htmlFor="last-name" className="block text-sm font-medium text-gray-100">
-                                                Nickname
-                                            </label>
-                                            <input
-                                                type="text"
-                                                name="last-name"
-                                                id="last-name"
-                                                autoComplete="family-name"
-                                                placeholder='Your nickname'
-                                                className="h-8 mt-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-dim-gray"
-                                            />
-                                        </div>
-
-                                        <div className="col-span-3 mt-4">
-                                            <label htmlFor="nano-address" className="block text-sm font-medium text-gray-100">
-                                                Nano address
-                                            </label>
-                                            <input
-                                                type="text"
-                                                name="nano-address"
-                                                id="nano-address"
-                                                autoComplete="off"
-                                                placeholder="Your nano address nano_3tsd..."
-                                                className="h-8 mt-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-dim-gray"
-                                            />
-                                        </div>
+                                        <Counter
+                                            min={0}
+                                            max={100}
+                                            defaultValue={0}
+                                            onChange={(value) => setPrice(value)}
+                                        />
 
                                     </div>
-                                </div>
-                                <div className="w-full flex justify-end align-center px-4 py-3 bg-gray-50 text-right sm:px-6" style={{
-                                    backgroundColor: "#3e3e3e"
-                                }}>
 
-                                    <div className="py-6">
-                                        <button
-                                            type="submit"
-                                            className="inline-flex justify-center py-1 px-8 border border-transparent shadow-sm text-base font-medium rounded-sm text-white bg-emerald-500 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                            onClick={postGuess}
-                                        >
-                                            Save
-                                        </button>
+                                    <div className="col-span-2">
+                                        <label htmlFor="last-name" className="block text-sm font-medium text-gray-100">
+                                            Nickname
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="nickname"
+                                            id="nickname"
+                                            autoComplete="nickname"
+                                            placeholder='Your nickname'
+                                            onChange={(e) => setNickname(e.target.value)}
+                                            className="h-8 mt-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-dim-gray"
+                                        />
                                     </div>
+
+                                    <div className="col-span-3 mt-4">
+                                        <label htmlFor="nano-address" className="block text-sm font-medium text-gray-100">
+                                            Nano address
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="nano-address"
+                                            id="nano-address"
+                                            autoComplete="off"
+                                            placeholder="Your nano address nano_3tsd..."
+                                            onChange={(e) => setAddress(e.target.value)}
+                                            className="h-8 mt-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-dim-gray"
+                                        />
+                                    </div>
+
                                 </div>
                             </div>
-                        </form>
+                            <div className="w-full flex justify-end align-center px-4 py-3 bg-gray-50 text-right sm:px-6" style={{
+                                backgroundColor: "#3e3e3e"
+                            }}>
+
+                                <div className="py-6">
+                                    <button
+                                        type="submit"
+                                        className="inline-flex justify-center py-1 px-8 border border-transparent shadow-sm text-base font-medium rounded-sm text-white bg-emerald-500 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                        onClick={postGuess}
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>

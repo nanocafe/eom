@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const TIMEOUT = 1000 * 20 // 20 seconds
+const TIMEOUT = 1000 * 30 // 30 seconds
 
 function createAPI(baseURL: string, timeout = TIMEOUT) {
 
@@ -16,7 +16,7 @@ function createAPI(baseURL: string, timeout = TIMEOUT) {
 
   }, function (error: any) {
 
-    console.log(error)
+    console.error(error)
 
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
