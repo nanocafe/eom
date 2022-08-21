@@ -10,7 +10,11 @@
   "dependencies": {
     "autoprefixer": "^10.4.0",
     "axios": "^0.24.0",
+    "bignumber.js": "^9.1.0",
+    "blakejs": "^1.2.1",
     "next": "latest",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
     "postcss": "^8.4.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
