@@ -8,8 +8,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/styled": "^11.10.5",
+    "@heroicons/react": "^2.0.13",
+    "@hookform/resolvers": "^2.9.10",
+    "@mui/material": "^5.10.17",
+    "@nanobyte-crypto/checkout": "^0.1.5",
+    "@tanstack/react-query": "^4.19.1",
     "autoprefixer": "^10.4.0",
-    "axios": "^0.24.0",
+    "axios": "^1.2.1",
     "bignumber.js": "^9.1.0",
     "blakejs": "^1.2.1",
     "next": "latest",
@@ -19,10 +25,12 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-google-recaptcha": "^2.1.0",
-    "react-hook-form": "^7.21.0",
+    "react-hook-form": "^7.40.0",
+    "react-imask": "^6.4.3",
     "react-select": "^5.2.1",
     "sequelize": "^6.21.3",
-    "tailwindcss": "^3.0.0"
+    "tailwindcss": "^3.0.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

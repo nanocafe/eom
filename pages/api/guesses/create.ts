@@ -1,3 +1,4 @@
+import axios from "axios";
 import { checkNanoAddress } from "lib/nano/check";
 import { toRaws, TunedBigNumber } from "lib/nano/convert";
 import { block_info } from "lib/nano/rpc";
@@ -7,32 +8,54 @@ import Guesses from "../db/Guesses";
 import { GuessData } from "../types";
 
 const OPEN_DAY = Number(process.env.OPEN_DAY || 1);
-const CLOSE_DAY = Number(process.env.CLOSE_DAY || 7);
+const CLOSE_DAY = Number(process.env.CLOSE_DAY || 17);
 const HOT_WALLET = process.env.HOT_WALLET;
 const PRICE_GUESS_NANO = toRaws(process.env.PRICE_GUESS_NANO);
+interface IPaymentMetadata {
+    // Default NanoByte metadata fields
+    merchantApiKey: string;
+    paymentId: string;
+    merchantName: string;
+    amount: string;
+    label: string;
 
-const validateGuess = (guess: GuessData) => {
+    // Custom NanoCafe metadata fields
+    userNickname: string;
+    userNanoAddress: string;
+    userGuessPrice: number;
+}
 
-    // Validate price
-    if (!("price" in guess)) {
-        throw ("Missing price");
-    }
-    validatePrice(guess.price);
+interface IPaymentResponse {
+    status: string;
+    metadata: IPaymentMetadata;
+}
+
+const validateGuess = (guess: IPaymentMetadata) => {
 
     // Validate nickname
-    if (!("nickname" in guess)) {
+    if (!("userNickname" in guess)) {
         throw ("Missing nickname");
     }
-   validateNickname(guess.nickname);
+    validateNickname(guess.userNickname);
 
-   // Validate Nano address
-    if (!("address" in guess)) {
+    // Validate Nano address
+    if (!("userNanoAddress" in guess)) {
         throw ("Missing address");
     }
-    validateNanoAddress(guess.address);
+    validateNanoAddress(guess.userNanoAddress);
+
+    // Validate price
+    if (!("userGuessPrice" in guess)) {
+        throw ("Missing price");
+    }
+    const price = Number(guess.userGuessPrice);
+    if (isNaN(price)) {
+        throw ("Price must be a number");
+    }
+    validatePrice(price);
 };
 
-export default function Create(req: NextApiRequest, res: NextApiResponse) {
+export default async function Create(req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method !== 'POST') return res.status(405).send({ message: 'Only POST requests allowed' })
 
@@ -47,7 +70,7 @@ export default function Create(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Parse user json request 
-    let json: GuessData = req.body;
+    let json: GuessData | any = req.body;
     if (typeof json !== "object") {
         try {
             json = JSON.parse(req.body)
@@ -57,43 +80,62 @@ export default function Create(req: NextApiRequest, res: NextApiResponse) {
             });
         }
     }
-    
+
+    console.log("json", json)
+
+    const response = await axios.get(
+        `https://api.nanobytepay.com/payments/${json.paymentId}`,
+        {
+            headers: {
+                "x-api-key": 'x8yGaJDZFFBbGCqwyj61Zsmz6KdUSGVe',
+            },
+        }
+    );
+
+    console.log('response', response.data);
+
+    const payment: IPaymentResponse = response.data;
+
+    if (payment.status !== 'confirmed') {
+        return res.status(400).json({
+            error: 'payment not confirmed'
+        });
+    }
+
     // Validate user guess
     try {
-        validateGuess(json);
+        validateGuess(payment.metadata);
     } catch (err) {
         return res.status(400).json({
             error: err
         });
     }
 
-    // Validate payment
-    block_info(json.hash)
-        .then((block) => {
+    const { userNickname, userNanoAddress, userGuessPrice, amount } = payment.metadata;
 
-            // If paid amount is less than price, return error
-            // Code 402 = Payment Required 
-            if (TunedBigNumber(block.amount).isLessThan(PRICE_GUESS_NANO)) {
-                return res.status(402).json({ error: "invalid amount" });
-            }
+    if (TunedBigNumber(amount).isLessThan(PRICE_GUESS_NANO)) {
+        return res.status(402).json({ error: 'insufficient amount' });
+    }
 
-            if (block.link_as_account != HOT_WALLET) {
-                return res.status(402).json({ error: "invalid destination" });
-            }
+    Guesses.init();
+    await Guesses.sync();
 
-            const { nickname, address, price, hash } = json;
+    console.log("saving guess...")
 
-            Guesses.create({ nickname, address, price, hash })
-                .then(resp => {
-                    res.status(200).json({
-                        successful: true,
-                        ...resp
-                    });
-                })
-                .catch(err => {
-                    res.status(400).json(err)
-                })
+    // Save user guess to database
+    Guesses.create({
+        nickname: userNickname,
+        address: userNanoAddress,
+        price: Number(userGuessPrice),
+        hash: json.paymentId
+    })
+        .then(resp => {
+            res.status(200).json({
+                successful: true,
+                ...resp
+            });
         })
-        .catch((err) => res.status(400).json({ error: err }))
-
+        .catch(err => {
+            res.status(400).json(err)
+        })
 }

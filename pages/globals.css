@@ -1,7 +1,16 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
-    margin: 0;
-    background-color: #4a4a4a;
-    color: #fff;
+  margin: 0;
+  background-color: #4a4a4a;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, Noto Sans, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 nav.nav {
@@ -311,17 +320,6 @@ thead tr {
 .input-group .form-control:first-child {
     padding: 0 32px;
     border-radius: 4px;
-}
-
-.input-group input:focus {
-    border-color: rgb(226, 183, 49);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(226, 183, 49, 0.7);
-    outline: 0;
-}
-
-.input-group.error input:focus {
-    border-color: rgba(284, 83, 101, .7);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(284, 83, 101, 0.6);
 }
 
 .input-group.ok .icon-ok,

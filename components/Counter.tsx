@@ -1,50 +1,72 @@
-import { useEffect, useState } from "react";
+import React from "react";
+import { IMaskInput } from 'react-imask';
+import Input, { InputProps } from "./Input";
+import { InputAdornment } from '@mui/material';
 
-interface CounterProps {
+type CounterProps = InputProps & {
+    label: string;
     min: number;
     max: number;
-    defaultValue: number;
-    onChange: (value: number) => void;
+    step: number;
+    defaultValue?: number;
+    onChange?: (value: number) => void;
 }
 
-export default function Counter ({ min, max, defaultValue, onChange }: CounterProps) {
+interface CustomProps {
+    onChange: (event: { target: { name: string; value: string } }) => void;
+    name: string;
+}
 
-    const [value, setValue] = useState<number>(defaultValue);
+const TextMaskCustom = React.forwardRef<HTMLElement, CustomProps>(
+    function TextMaskCustom(props, ref) {
+        const { onChange, ...other } = props;
+        return (
+            <IMaskInput
+                {...other}
+                mask="0.00"
+                definitions={{
+                    '#': /[0-9]/,
+                }}
+                inputRef={ref as any}
+                onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
+                overwrite
+            />
+        );
+    },
+);
 
-    const increment = () => {
-        if (value < max) {
-            setValue(value + .5);
-        }
+export default function Counter({ label, min, max, step, value: _value, defaultValue, onChange, ...props }: CounterProps) {
+
+    const [value, setValue] = React.useState(defaultValue?.toString() || '0.00');
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
+        onChange && onChange(Number(event.target.value));
     };
-    const decrement = () => {
-        if (value > min) {
-            setValue(value - .5);
-        }
-    };
 
-    useEffect(() => {
-        onChange(value);
-    }, [value])
+    console.log('props', props)
 
     return (
-        <>
-            <div className="input-number-container flex h-8 mt-1">
-                <button className="input-number-decrement w-8 bg-gold rounded-sm" type="button" onClick={decrement}>–</button>
-                <input
-                    id="input-price-guess"
-                    className="h-full w-20 px-4 shadow-sm sm:text-sm bg-dim-gray"
-                    type="text"
-                    value={value.toFixed(2)}
-                    autoComplete="off"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                    style={{
-                        textAlign: 'center'
-                    }}
-                />
-                <button className="input-number-increment h-full bg-gold w-8 rounded-sm" type="button" onClick={increment}>+</button>
-            </div>
-        </>
+        <Input
+            type="number"
+            label={label}
+            id="price"
+            className="w-40"
+            variant='outlined'
+            value={value}
+            inputProps={{
+                inputMode: 'numeric',
+                pattern: '[0-9].*',
+                min,
+                max,
+                step,
+            }}
+            InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                inputComponent: TextMaskCustom as any,
+            }}
+            onChange={handleChange}
+            {...props}
+        />
     )
 }

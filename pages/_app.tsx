@@ -1,13 +1,21 @@
-import { AppProps } from 'next/app'
-import 'tailwindcss/tailwind.css'
+import { AppProps } from 'next/app';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import 'tailwindcss/tailwind.css';
+import { theme } from '../styles/mui-theme';
+import { ThemeProvider } from '@mui/material/styles';
+import './globals.css';
 
-import './globals.css'
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <div suppressHydrationWarning>
-      {typeof window === 'undefined' ? null : <Component {...pageProps} />}
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <div suppressHydrationWarning>
+          {typeof window === 'undefined' ? null : <Component {...pageProps} />}
+        </div>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }
 

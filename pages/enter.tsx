@@ -1,149 +1,255 @@
 import Layout from 'components/Layout'
-import Navbar from 'components/Navbar'
 import Link from 'next/link'
 import Counter from 'components/Counter'
 import api from 'services/api'
-import { useState } from 'react'
+import React, { ButtonHTMLAttributes, useEffect, useState } from 'react'
 import { validateNanoAddress, validateNickname, validatePrice } from 'utils/validate'
+import { button } from "@nanobyte-crypto/checkout";
+import { toRaws } from 'lib/nano/convert'
+import { useMutation } from '@tanstack/react-query'
+import ErrorAlert from 'components/Alert'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, useForm } from 'react-hook-form'
+import Input from 'components/Input'
+import Button from 'components/Button'
+import { ArrowLeftCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
+
+const merchantApiKey = 'x8yGaJDZFFBbGCqwyj61Zsmz6KdUSGVe'
+
+const forgotPasswordSchema = yup.object().shape({
+    nickname: yup
+        .string()
+        .required('Nickname required')
+        .min(3, 'Nickname must be at least 3 characters'),
+    address: yup
+        .string()
+        .required('Nano address required'),
+    price: yup
+        .number()
+        .required('Price required')
+})
+
+interface IFormData {
+    nickname: string;
+    address: string;
+    price: number;
+}
+
+
 
 export default function Home() {
 
     const [price, setPrice] = useState<number>(0);
     const [nickname, setNickname] = useState<string>('');
     const [address, setAddress] = useState<string>('');
+    const [paymentId, setPaymentId] = useState<string>('');
 
-    const postGuess = async () => {
+    const paymentButtonRef = React.useRef<HTMLButtonElement>(null);
 
-        try {
-
-            validatePrice(price);
-            validateNickname(nickname);
-            validateNanoAddress(address);
-
-            const response = await api.post('/guesses/create', {
-                price,
-                nickname,
-                address
-            })
-            console.log('response', response);
-        } catch (err) {
-            alert("Error: " + err);
+    const { mutate: postGuess, error, isLoading: isPosting, isSuccess, isError } = useMutation({
+        mutationFn: (paymentId: string) => api.post('/guesses/create', {
+            paymentId
+        }),
+        onSuccess: (response) => {
+            // Invalidate and refetch
+            console.log('response', response)
+        },
+        onError: (error) => {
+            console.log('error', error);
         }
+    })
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors, isSubmitting, isValid },
+    } = useForm<IFormData>({
+        defaultValues: {
+            nickname: '',
+            address: '',
+            price: 1.01,
+        },
+        resolver: yupResolver(forgotPasswordSchema),
+    })
+
+    //         validatePrice(price);
+    //         validateNickname(nickname);
+    //         validateNanoAddress(address);
+
+    const onSubmit = async (data: IFormData) => {
+
+
+        console.log('data', data);
+
+        button.setInterceptClick(
+            async () => {
+                return {
+                    amount: toRaws(0.000001),
+                    label: "End Of Month Guess", // Label is what they are paying for
+                    message: "Thank you!",
+                    orderNumber: "order#1234",
+                    userNickname: data.nickname,
+                    userNanoAddress: data.address,
+                    userGuessPrice: data.price
+                };
+            },
+        );
+
+        paymentButtonRef.current?.click();
 
     }
 
+    useEffect(() => {
+
+        // call this once, when the page has loaded:
+        button.init(
+            merchantApiKey,
+            async ({ paymentStatus, paymentId }) => {
+                // this callback will be called when a payment has been completed
+                console.log('payment status', { paymentStatus, paymentId });
+                if (paymentStatus === 'confirmed') {
+                    setPaymentId(paymentId);
+                    postGuess(paymentId);
+                }
+            }
+        );
+
+        button.setRequiredFields(
+            // You can set any required fields for a payment as an array of strings
+            ['userNickname', 'userNanoAddress', 'userGuessPrice'],
+            (data) => {
+                // This callback will be called if the user clicks trys to make a payment without the required fields
+                console.log(data);
+            }
+        );
+    }, [])
 
     return (
-        <Layout>
-
-            <script src="/js/dist/html5-qrcode.min.js"></script>
-
-            <Navbar />
-
-            <main className="my-8">
-
-                <div className="py-6">
+        <Layout showNavbar={false}>
+            <main className="mt-2">
+                <div className="pb-4">
                     <Link href="/">
-                        <a>
-                            <button
-                                className="text-base bg-gold px-8 py-1 rounded-sm"
-                            >Back</button>
+                        <a className="text-base px-8 py-1 rounded-sm text-gold flex items-center space-x-1">
+                            <ArrowLeftCircleIcon className="h-5 w-5" />
+                            <span>Back</span>
                         </a>
                     </Link>
                 </div>
 
                 <div className="grid justify-center">
+                    <div className="shadow overflow-hidden sm:rounded-md p-4" style={{
+                        backgroundColor: "#3e3e3e"
+                    }}>
+                        <form onSubmit={handleSubmit(onSubmit)}>
 
-                    <div className="mt-5 md:mt-0">
+                            <div className="grid grid-cols-3 gap-3 py-2 mb-4">
 
-                        <div className="shadow overflow-hidden sm:rounded-md">
-                            <div className="px-4 py-5 sm:p-6" style={{
-                                backgroundColor: "#3e3e3e"
-                            }}>
+                                <div className="col-span-3 sm:col-span-1">
+                                    <Controller
+                                        name='price'
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Counter
+                                                label="Price Guess (USDT)"
+                                                min={0.01}
+                                                max={9.99}
+                                                step={0.01}
+                                                defaultValue={1.01}
+                                                disabled={isSuccess || isError || isPosting}
+                                                {...field}
+                                            />
+                                        )}
+                                    />
+                                </div>
 
-                                <div className="grid grid-cols-3 gap-3">
-                                    <div className="col-span-1">
-                                        <label htmlFor="first-name" className="block text-sm font-medium text-gray-100">
-                                            Price Guess (USDT)
-                                        </label>
+                                <div className="col-span-3 sm:col-span-2">
+                                    <Controller
+                                        name='nickname'
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Input
+                                                type="text"
+                                                label="Nickname"
+                                                id="nickname"
+                                                className='w-full'
+                                                {...field}
+                                                errorMessage={errors.nickname?.message}
+                                                disabled={isSuccess || isError || isPosting}
+                                            />
+                                        )}
+                                    />
+                                </div>
 
-                                        <Counter
-                                            min={0}
-                                            max={100}
-                                            defaultValue={0}
-                                            onChange={(value) => setPrice(value)}
-                                        />
-
-                                    </div>
-
-                                    <div className="col-span-2">
-                                        <label htmlFor="last-name" className="block text-sm font-medium text-gray-100">
-                                            Nickname
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="nickname"
-                                            id="nickname"
-                                            autoComplete="nickname"
-                                            placeholder='Your nickname'
-                                            onChange={(e) => setNickname(e.target.value)}
-                                            className="h-8 mt-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-dim-gray"
-                                        />
-                                    </div>
-
-                                    <div className="col-span-3 mt-4">
-                                        <label htmlFor="nano-address" className="block text-sm font-medium text-gray-100">
-                                            Nano address
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="nano-address"
-                                            id="nano-address"
-                                            autoComplete="off"
-                                            placeholder="Your nano address nano_3tsd..."
-                                            onChange={(e) => setAddress(e.target.value)}
-                                            className="h-8 mt-1 px-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-dim-gray"
-                                        />
-                                    </div>
-
+                                <div className="col-span-3 mt-4">
+                                    <Controller
+                                        name='address'
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Input
+                                                type="text"
+                                                label="Nano address"
+                                                id="nano-address"
+                                                autoComplete="off"
+                                                placeholder="nano_3tsd..."
+                                                className='w-full'
+                                                {...field}
+                                                disabled={isSuccess || isError || isPosting}
+                                            />
+                                        )}
+                                    />
                                 </div>
                             </div>
-                            <div className="w-full flex justify-end align-center px-4 py-3 bg-gray-50 text-right sm:px-6" style={{
-                                backgroundColor: "#3e3e3e"
-                            }}>
 
-                                <div className="py-6">
-                                    <button
-                                        type="submit"
-                                        className="inline-flex justify-center py-1 px-8 border border-transparent shadow-sm text-base font-medium rounded-sm text-white bg-emerald-500 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                        onClick={postGuess}
-                                    >
-                                        Save
-                                    </button>
-                                </div>
+                            <button id="nanobytepay" ref={paymentButtonRef} className="sr-only" />
+
+                            <div className="w-full flex flex-col justify-center pb-2 space-y-4">
+
+                                {
+                                    isSuccess
+                                        ? (
+                                            <div className="flex flex-col items-center space-y-2">
+                                                <CheckCircleIcon className="h-10 w-10 text-green-500" />
+                                                <h2 className="text-lg text-center">Thank you for your guess!</h2>
+                                                <p className="text-center text-sm">Your PaymentId: {paymentId}</p>
+                                            </div>
+                                        ) : error
+                                            ? (
+                                                <>
+                                                    <ErrorAlert title={`Payment Error: ${error}`} messages={[
+                                                        'Save your payment id and contact support if you think this is a mistake'
+                                                    ]} />
+                                                    {
+                                                        paymentId && (
+                                                            <Button
+                                                                type='button'
+                                                                onClick={() => postGuess(paymentId)}
+                                                            >
+                                                                Try Again
+                                                            </Button>
+                                                        )
+                                                    }
+                                                </>
+                                            ) : (
+
+                                                <Button
+                                                    type='submit'
+                                                    loading={isSubmitting || isPosting}
+                                                >
+                                                    {
+                                                        isPosting ? 'Submiting...' : 'Submit'
+                                                    }
+                                                </Button>
+                                            )
+                                }
                             </div>
-                        </div>
+
+                        </form>
+
                     </div>
                 </div>
             </main>
-
-            <div className="qr-modal">
-                <div className="qr-content">
-                    <div id="qr-reader" style={{ width: 500, maxWidth: "100%" }}></div>
-                    <div className="close">X</div>
-                </div>
-            </div>
-
-            <script src="http://localhost:3000/api.js"></script>
-            <script src="/js/scanner.js"></script>
-            <script type="text/javascript" src="/js/dist/bignumber.min.js"></script>
-            <script src="/utils.js"></script>
-            <script src="/main.js"></script>
-            <script src="/enter.js"></script>
-
-
         </Layout >
-
     )
 
 }
