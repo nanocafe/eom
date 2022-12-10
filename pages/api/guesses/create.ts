@@ -7,12 +7,9 @@ import Guesses from "../db/Guesses";
 import { GuessData } from "../types";
 
 const OPEN_DAY = Number(process.env.OPEN_DAY || 1);
-const CLOSE_DAY_BEFORE = Number(process.env.CLOSE_DAY_BEFORE || 1);
+const CLOSE_DAY = Number(process.env.CLOSE_DAY || 7);
 const HOT_WALLET = process.env.HOT_WALLET;
 const PRICE_GUESS_NANO = toRaws(process.env.PRICE_GUESS_NANO);
-
-const daysInThisMonth = () => new Date(0).getDate();
-const today = () => new Date().getDate();
 
 const validateGuess = (guess: GuessData) => {
 
@@ -39,11 +36,13 @@ export default function Create(req: NextApiRequest, res: NextApiResponse) {
 
     if (req.method !== 'POST') return res.status(405).send({ message: 'Only POST requests allowed' })
 
+    const today = () => new Date().getDate();
+
     // Competition of the month not yet started
     if (today() < OPEN_DAY) return res.status(400).json({ error: "not started yet" })
 
     // Competition of the month finished
-    if ((daysInThisMonth() - today()) <= CLOSE_DAY_BEFORE) {
+    if (today() > CLOSE_DAY) {
         return res.status(400).json({ error: "finished" })
     }
 
