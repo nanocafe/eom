@@ -77,9 +77,6 @@ export default function Home() {
 
     const onSubmit = async (data: IFormData) => {
 
-
-        console.log('data', data);
-
         button.setInterceptClick(
             async () => {
                 return {
@@ -124,19 +121,19 @@ export default function Home() {
     }, [])
 
     return (
-        <Layout showNavbar={false}>
-            <main className="mt-2">
+        <Layout>
+            <main className="w-full mt-2 px-2">
                 <div className="pb-4">
                     <Link href="/">
-                        <a className="text-base px-8 py-1 rounded-sm text-gold flex items-center space-x-1">
+                        <a className="text-base py-1 rounded-sm text-gold flex items-center space-x-1">
                             <ArrowLeftCircleIcon className="h-5 w-5" />
                             <span>Back</span>
                         </a>
                     </Link>
                 </div>
 
-                <div className="grid justify-center">
-                    <div className="shadow overflow-hidden sm:rounded-md p-4" style={{
+                <div className="w-full flex justify-center">
+                    <div className="w-full max-w-2xl shadow overflow-hidden rounded-md p-4" style={{
                         backgroundColor: "#3e3e3e"
                     }}>
                         <form onSubmit={handleSubmit(onSubmit)}>
