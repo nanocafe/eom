@@ -2,7 +2,7 @@ import Layout from 'components/Layout'
 import Link from 'next/link'
 import Counter from 'components/Counter'
 import api from 'services/api'
-import React, { ButtonHTMLAttributes, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { validateNanoAddress, validateNickname, validatePrice } from 'utils/validate'
 import { button } from "@nanobyte-crypto/checkout";
 import { toRaws } from 'lib/nano/convert'
@@ -14,8 +14,6 @@ import { Controller, useForm } from 'react-hook-form'
 import Input from 'components/Input'
 import Button from 'components/Button'
 import { ArrowLeftCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
-
-const merchantApiKey = 'x8yGaJDZFFBbGCqwyj61Zsmz6KdUSGVe'
 
 const forgotPasswordSchema = yup.object().shape({
     nickname: yup
@@ -48,7 +46,7 @@ export default function Home() {
     const paymentButtonRef = React.useRef<HTMLButtonElement>(null);
 
     const { mutate: postGuess, error, isLoading: isPosting, isSuccess, isError } = useMutation({
-        mutationFn: (paymentId: string) => api.post('/guesses/create', {
+        mutationFn: (paymentId: string) => api.post('/guesses', {
             paymentId
         }),
         onSuccess: (response) => {
@@ -104,7 +102,7 @@ export default function Home() {
 
         // call this once, when the page has loaded:
         button.init(
-            merchantApiKey,
+            process.env.NEXT_PUBLIC_NANO_CHECKOUT_API_KEY || '',
             async ({ paymentStatus, paymentId }) => {
                 // this callback will be called when a payment has been completed
                 console.log('payment status', { paymentStatus, paymentId });
