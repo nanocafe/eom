@@ -8,49 +8,23 @@ export default function Home() {
 
   return (
     <Layout>
-      <main>
-        <div className="info-section">
-          <div>
-            Current Nano Price: <span className="nano-price up" id="nano-price"></span>
-          </div>
-          <div className="countdown">
-            Ending In:
-            <div>
-              <span className="time-ending" id="ending-days">XX</span>
-              <div className="unity-time">Days</div>
+      <main className='p-2'>
+        <div id="prize-banner" className="w-full flex justify-center pb-2 sm:pt-2">
+          <div className='flex flex-col items-center'>
+            <h5 className='text-sm sm:text-lg'>Total Reward Available</h5>
+            <h3 className='text-2xl sm?text-3xl'>10 NANO</h3>
+            <div className="text-gray-300 mt-1 flex">
+              ________ <img src="/icons/laurel.png" className='-mt-2 w-12 sm:w-16' /> ________
             </div>
-            -
-            <div>
-              <span className="time-ending" id="ending-hours">XX</span>
-              <div className="unity-time">Hours</div>
-            </div>
-            :
-            <div>
-              <span className="time-ending" id="ending-minutes">XX</span>
-              <div className="unity-time">Mins</div>
-            </div>
-            :
-            <div>
-              <span className="time-ending" id="ending-seconds">XX</span>
-              <div className="unity-time">Secs</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="prize-banner">
-          <h5>Total Reward Available</h5>
-          <h3>10 Nano</h3>
-          <div className="laurel w-full flex justify-center">
-            _________ <img src="/icons/laurel.png" width="60px" /> _________
           </div>
         </div>
 
         <div className='w-full'>
-          <div className="table-header">
 
-            <div className="header_wrap">
-              <div className="num_rows">
-                <select className="form-control px-4 py-1 rounded" name="state" id="maxRows">
+          <div id="table-header" className='w-full'>
+            <div id="header_wrap" className='w-full flex justify-between'>
+              <div id="num_rows">
+                <select className="text-sm sm:text-base px-4 py-2 rounded bg-alt-gray w-40 border border-dim-gray" name="state" id="maxRows">
                   <option value="15">15</option>
                   <option value="20">30</option>
                   <option value="50">60</option>
@@ -59,24 +33,26 @@ export default function Home() {
                 </select>
               </div>
 
-              <div className="table_search">
-                <input type="text" id="search_input_all"
-                  placeholder="Search.." className="form-control px-4 py-1 rounded" />
+              <div id="table_search">
+                <input type="text" id="input_search"
+                  placeholder="Search.." className="text-sm sm:text-base px-4 py-2 rounded bg-alt-gray w-40 sm:w-64 border border-dim-gray" />
               </div>
             </div>
 
-            <div className='pagination-container'>
+            <div id='pagination-container' className='py-1'>
               <nav>
-                <ul className="pagination">
+                <ul id="pagination">
                 </ul>
               </nav>
-              <div className="rows_count">Showing 11 to 20 of 91 entries</div>
+              <div id="rows-count" className='text-xs sm:text-sm' style={{
+                color: '#bbb'
+              }}>Showing 11 to 20 of 91 entries</div>
             </div>
           </div>
 
-          <div className="overflow-hidden md:rounded-lg ">
+          <div className="overflow-hidden md:rounded-lg my-2">
             <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-dim-gray border border-dim-gray">
+              <thead className="bg-dim-gray2 border border-dim-gray">
                 <tr>
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-sm font-semibold text-gray-200 sm:pl-6">
                     Position
@@ -85,12 +61,12 @@ export default function Home() {
                     Nickname
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-sm font-semibold text-gray-200">
-                    Price Guess
+                    $ Price Guess
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-transparent border-none">
-                {guesses?.map((guess: any) => (
+                {guesses?.slice(0, 8).map((guess: any) => (
                   <tr key={guess.id} className="bg-alt-gray">
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm font-medium text-gray-200 sm:pl-6 border border-dim-gray">
                       {guess.id}⁰

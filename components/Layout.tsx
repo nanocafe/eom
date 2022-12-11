@@ -16,13 +16,13 @@ export default function Layout({ children, showNavbar = true }: LayoutProps) {
         <title>NanoCafe EOM</title>
       </Head>
 
-      <main className='w-full flex flex-col justify-center'>
+      <main className='w-full flex flex-col items-center'>
         {
           showNavbar && (
             <Navbar />
           )
         }
-        <div className='max-w-7xl'>{children}</div>
+        <div className='w-full max-w-7xl'>{children}</div>
       </main>
     </>
   )
