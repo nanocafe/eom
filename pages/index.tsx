@@ -12,9 +12,11 @@ export default function Home() {
         <div id="prize-banner" className="w-full flex justify-center pb-2 sm:pt-2">
           <div className='flex flex-col items-center'>
             <h5 className='text-sm sm:text-lg'>Total Reward Available</h5>
-            <h3 className='text-2xl sm?text-3xl'>10 NANO</h3>
-            <div className="text-gray-300 mt-1 flex">
-              ________ <img src="/icons/laurel.png" className='-mt-2 w-12 sm:w-16' /> ________
+            <h3 className='text-2xl sm:text-3xl font-bold' style={{
+              textShadow: '0 0 5px #e2b731'
+            }}>10 NANO</h3>
+            <div className="text-gray-300 mt-1 flex space-x-4">
+              <span>________</span> <img src="/icons/laurel.png" className='-mt-2 w-12 sm:w-16' /> <span>________</span>
             </div>
           </div>
         </div>
