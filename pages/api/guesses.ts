@@ -1,4 +1,5 @@
 import axios from "axios";
+import { DEFAULT_CLOSE_DAY, DEFAULT_OPEN_DAY, DEFAULT_PRICE_GUESS_NANO } from "core/constants";
 import { checkNanoAddress } from "lib/nano/check";
 import { toRaws, TunedBigNumber } from "lib/nano/convert";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -6,9 +7,10 @@ import { validateNanoAddress, validateNickname, validatePrice } from "utils/vali
 import Guesses from "./db/Guesses";
 import { GuessData } from "./types";
 
-const OPEN_DAY = Number(process.env.OPEN_DAY || 1);
-const CLOSE_DAY = Number(process.env.CLOSE_DAY || 17);
-const PRICE_GUESS_NANO = toRaws(process.env.PRICE_GUESS_NANO);
+const OPEN_DAY = Number(process.env.NEXT_PUBLIC_OPEN_DAY || DEFAULT_OPEN_DAY);
+const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY);
+const PRICE_GUESS_NANO = toRaws(process.env.PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO);
+const CHECKOUT_API_KEY = process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '';
 interface IPaymentMetadata {
     // Default NanoByte metadata fields
     merchantApiKey: string;
@@ -90,7 +92,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             `https://api.nanobytepay.com/payments/${json.paymentId}`,
             {
                 headers: {
-                    "x-api-key": process.env.NEXT_PUBLIC_NANO_CHECKOUT_API_KEY || '',
+                    "x-api-key": CHECKOUT_API_KEY,
                 },
             }
         );

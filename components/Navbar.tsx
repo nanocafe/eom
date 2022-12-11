@@ -1,7 +1,15 @@
+import { DEFAULT_CLOSE_DAY } from 'core/constants';
 import Link from 'next/link'
+import { useEffect, useState } from 'react';
 import Button from './Button'
+import CountdownViewer from './CountdownViewer';
+
+const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY);
 
 export default function Navbar() {
+
+  const deadline = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(0,0,0,0);
+
   return (
     <nav className="w-full flex flex-col items-center">
 
@@ -39,30 +47,7 @@ export default function Navbar() {
               <div>Nano Price:</div>
               <div className="text-base font-bold text-green-400" id="nano-price">$0.74</div>
             </div>
-            <div id="countdown" className='flex items-top space-x-1 sm:space-x-2 font-medium sm:font-semibold'>
-              <span className='text-base'>Ending In:</span>
-              <div className='flex space-x-1'>
-                <div className='text-center'>
-                  <span className="text-xl text-red-400" id="ending-days">XX</span>
-                  <div className="text-xs">Days</div>
-                </div>
-                <span className='leading-7'>-</span>
-                <div className='text-center'>
-                  <span className="text-xl text-red-400" id="ending-hours">XX</span>
-                  <div className="text-xs">Hours</div>
-                </div>
-                <span className='leading-7'>:</span>
-                <div className='text-center'>
-                  <span className="text-xl text-red-400" id="ending-minutes">XX</span>
-                  <div className="text-xs">Mins</div>
-                </div>
-                <span className='leading-7'>:</span>
-                <div className='text-center'>
-                  <span className="text-xl text-red-400" id="ending-seconds">XX</span>
-                  <div className="text-xs">Secs</div>
-                </div>
-              </div>
-            </div>
+              <CountdownViewer date={deadline} />
           </div>
         </div>
       </div>
