@@ -1,16 +1,16 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  background-color: #4a4a4a;
-  color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, Noto Sans, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    margin: 0;
+    background-color: #4a4a4a;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, Noto Sans, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 nav.nav {
@@ -125,78 +125,6 @@ p {
     margin-bottom: 35px;
 }
 
-thead, tbody, tbody tr {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-tbody tr {
-    margin-bottom: 1px;
-}
-
-table, .table-bordered {
-    border: 0;
-}
-
-.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
-    border-top: 0;
-    border-bottom: 0;
-    border-color: #606060;
-    color: white;
-}
-
-thead tr th, .table-bordered>thead>tr>th {
-    font-size: 12px;
-    background-color: #606060;
-    border: 0;
-}
-
-thead tr {
-    border-bottom: 1px solid #3e3e3e;
-}
-
-.table-container {
-    max-width: 100%;
-}
-
-tr {
-    display: flex;
-    width: 32% !important;
-    background-color: #606060;
-}
-
-th {
-    width: 32% !important;
-}
-
-tbody td {
-    width: 32% !important;
-    background-color: #606060;
-}
-
-.table-striped>tbody>tr:nth-of-type(odd) {
-    background-color: #606060;
-}
-
-table th {
-    background-color: #606060;
-    color: #555;
-}
-
-table tr:nth-child(even) {
-    background-color: #606060;
-}
-
-.table-striped>tbody>tr:nth-of-type(odd) {
-    background-color: #606060;
-}
-
-th {
-    background-color: #606060;
-    color: #fff;
-}
-
 .form-control {
     background-color: #606060;
     color: #fff;
@@ -205,20 +133,6 @@ th {
 
 .laurel {
     color: #888;
-}
-
-@media only screen and (max-width: 740px) {
-    thead tr:last-child {
-        display: none;
-    }
-
-    tr {
-        width: 48% !important;
-    }
-
-    th {
-        width: 48% !important;
-    }
 }
 
 .btn-transparency {
@@ -231,10 +145,6 @@ th {
 
 .btn-transparency:hover {
     background-color: #ccc;
-}
-
-tr.invalid-result {
-    display: none !important;
 }
 
 .pagination>li, .pagination>li:first-child, .pagination>li:last-child {
@@ -260,12 +170,6 @@ tr.invalid-result {
     background-color: #e2b731;
     color: #fff;
 }
-
-
-thead tr {
-    display: none;
-}
-
 
 
 .form-group {
@@ -389,11 +293,6 @@ thead tr {
 
 .bi-person-dash-fill {
     color: #ea5365;
-}
-
-table th,
-table td {
-    text-align: center;
 }
 
 .pagination {
