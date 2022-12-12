@@ -21,6 +21,9 @@ export const validateNickname = (nickname: string) => {
     if (nickname.length > MAX_NICKNAME_LENGTH) {
         throw ("Nickname must be less than 20 characters");
     }
+    if (!/^[a-z0-9]+$/.test(nickname)) {
+        throw ("Nickname must be alphanumeric lower case only");
+    }
 }
 
 export const validateGuess = (guess: IPaymentMetadata) => {
