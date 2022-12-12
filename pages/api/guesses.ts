@@ -23,7 +23,16 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     try {
         if (req.method === 'GET') {
 
-            const values = await guesses.readAll();
+            const startDate = new Date(new Date().setUTCDate(OPEN_DAY)).setUTCHours(0, 0, 0, 0);
+            const endDate = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(23, 59, 59, 999);
+            
+            // Get all guesses from the current month 
+            const values = await guesses.findAll({
+                createdAt: {
+                    [Op.gt]: startDate,
+                    [Op.lt]: endDate
+                }
+            });
             return res.status(200).json(values);
 
         } else if (req.method === 'POST') {

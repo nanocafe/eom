@@ -89,5 +89,9 @@ export default class Guesses {
         if (!entry) return null;
         return entry.dataValues;
     }
+
+    findAll = async (where: any): Promise<unknown> => {
+        return await this.guesses.findAll({ where, raw: true })
+    }
 }
 
