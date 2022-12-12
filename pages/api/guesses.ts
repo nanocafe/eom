@@ -134,7 +134,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             // Save user guess to database
             guesses.create({
                 nickname,
-                address,
+                address: address.replace("xrb_", "nano_"),
                 price: Number(price),
                 hash: json.paymentId
             })
