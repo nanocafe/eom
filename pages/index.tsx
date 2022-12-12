@@ -7,7 +7,10 @@ export default function Home() {
   const { data: guesses, isLoading } = useQuery(["guesses"], () => api.get("guesses"));
 
   return (
-    <Layout>
+    <Layout navbarOption={{
+      name: 'Enter Now',
+      href: '/enter'
+    }}>
       <main className='p-2'>
         <div id="prize-banner" className="w-full flex justify-center pb-2 sm:pt-2">
           <div className='flex flex-col items-center'>

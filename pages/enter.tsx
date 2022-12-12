@@ -121,7 +121,10 @@ export default function Home() {
     }, [])
 
     return (
-        <Layout>
+        <Layout navbarOption={{
+            name: 'Home',
+            href: '/'
+        }}>
             <main className="w-full mt-2 px-2">
                 <div className="pb-4">
                     <Link href="/">

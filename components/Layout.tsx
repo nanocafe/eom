@@ -1,12 +1,13 @@
 import Head from 'next/head'
-import Navbar from './Navbar'
+import Navbar, { NavbarOption } from './Navbar'
 
-interface LayoutProps {
-  children: React.ReactNode
-  showNavbar?: boolean
+export interface LayoutProps {
+  children: React.ReactNode;
+  showNavbar?: boolean;
+  navbarOption?: NavbarOption;
 }
 
-export default function Layout({ children, showNavbar = true }: LayoutProps) {
+export default function Layout({ children, showNavbar = true, navbarOption }: LayoutProps) {
   return (
     <>
       <Head>
@@ -19,7 +20,7 @@ export default function Layout({ children, showNavbar = true }: LayoutProps) {
       <main className='w-full flex flex-col items-center'>
         {
           showNavbar && (
-            <Navbar />
+            <Navbar option={navbarOption} />
           )
         }
         <div className='w-full max-w-7xl'>{children}</div>

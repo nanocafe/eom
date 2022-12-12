@@ -6,9 +6,18 @@ import CountdownViewer from './CountdownViewer';
 
 const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY);
 
-export default function Navbar() {
+export interface NavbarOption {
+  name: string;
+  href: string;
+}
 
-  const deadline = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(0,0,0,0);
+export interface NavbarProps {
+  option?: NavbarOption;
+}
+
+export default function Navbar({ option }: NavbarProps) {
+
+  const deadline = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(0, 0, 0, 0);
 
   return (
     <nav className="w-full flex flex-col items-center">
@@ -28,15 +37,21 @@ export default function Navbar() {
           </div>
         </div>
         <div>
-          <Link href="/enter">
-            <a>
-              <Button style={{
-                width: '130px',
-              }}>
-                Enter Now
-              </Button>
-            </a>
-          </Link>
+          {
+            option ? (
+              <Link href={option.href}>
+                <a>
+                  <Button style={{
+                    width: '130px',
+                  }}>
+                    {option.name}
+                  </Button>
+                </a>
+              </Link>
+            ) : (
+              <div />
+            )
+          }
         </div>
       </div>
 
@@ -47,7 +62,7 @@ export default function Navbar() {
               <div>Nano Price:</div>
               <div className="text-base font-bold text-green-400" id="nano-price">$0.74</div>
             </div>
-              <CountdownViewer date={deadline} />
+            <CountdownViewer date={deadline} />
           </div>
         </div>
       </div>
