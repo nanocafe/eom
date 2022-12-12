@@ -1,15 +1,15 @@
 import axios from "axios";
 import { DEFAULT_CLOSE_DAY, DEFAULT_OPEN_DAY, DEFAULT_PRICE_GUESS_NANO } from "core/constants";
-import { checkNanoAddress } from "lib/nano/check";
-import { toRaws, TunedBigNumber } from "lib/nano/convert";
 import { NextApiRequest, NextApiResponse } from "next";
-import { validateNanoAddress, validateNickname, validatePrice } from "utils/validate";
+import { validateNickname, validatePrice } from "utils/validate";
 import Guesses from "./db/Guesses";
 import { GuessData } from "./types";
+import { convert, Unit, checkAddress } from 'nanocurrency';
+import { TunedBigNumber } from "utils/nano";
 
 const OPEN_DAY = Number(process.env.NEXT_PUBLIC_OPEN_DAY || DEFAULT_OPEN_DAY);
 const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY);
-const PRICE_GUESS_NANO = toRaws(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO);
+const PRICE_GUESS_NANO = convert(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO, { from: Unit.NANO, to: Unit.raw });
 const CHECKOUT_API_KEY = process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '';
 
 const guesses = new Guesses();
@@ -45,7 +45,9 @@ const validateGuess = (guess: IPaymentMetadata) => {
     if (!("userNanoAddress" in guess)) {
         throw ("Missing address");
     }
-    validateNanoAddress(guess.userNanoAddress);
+    if (!checkAddress(guess.userNanoAddress)) {
+        throw ("Invalid address");
+    }
 
     // Validate price
     if (!("userGuessPrice" in guess)) {

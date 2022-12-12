@@ -1,5 +1,3 @@
-import { checkNanoAddress } from "lib/nano/check";
-
 export const validatePrice = (price: number) => {
     if (typeof price !== 'number' || price <= 0) {
         throw ("Price must be a positive number");
@@ -18,17 +16,5 @@ export const validateNickname = (nickname: string) => {
     }
     if (nickname.length > 20) {
         throw ("Nickname must be less than 20 characters");
-    }
-}
-
-export const validateNanoAddress = (address: string) => {
-    if (typeof address !== 'string') {
-        throw ("Address must be a string");
-    }
-    if (!address.startsWith("nano_")) {
-        throw ("Address must start with nano_");
-    }
-    if (checkNanoAddress(address) !== true) {
-        throw ("Address is not valid");
     }
 }

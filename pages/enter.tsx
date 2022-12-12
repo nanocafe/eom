@@ -3,9 +3,8 @@ import Link from 'next/link'
 import Counter from 'components/Counter'
 import api from 'services/api'
 import React, { useEffect, useState } from 'react'
-import { validateNanoAddress, validateNickname, validatePrice } from 'utils/validate'
+import { validateNickname, validatePrice } from 'utils/validate'
 import { button } from "@nanobyte-crypto/checkout";
-import { toRaws } from 'lib/nano/convert'
 import { useMutation } from '@tanstack/react-query'
 import ErrorAlert from 'components/Alert'
 import * as yup from 'yup'
@@ -15,6 +14,7 @@ import Input from 'components/Input'
 import Button from 'components/Button'
 import { ArrowLeftCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
 import { DEFAULT_PRICE_GUESS_NANO } from 'core/constants'
+import { convert, Unit } from 'nanocurrency'
 
 const forgotPasswordSchema = yup.object().shape({
     nickname: yup
@@ -35,7 +35,7 @@ interface IFormData {
     price: number;
 }
 
-const PRICE_GUESS_NANO = toRaws(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO);
+const PRICE_GUESS_NANO = convert(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO, { from: Unit.NANO, to: Unit.raw });
 
 export default function Home() {
 
