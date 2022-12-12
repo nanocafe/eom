@@ -17,7 +17,7 @@ export interface NavbarProps {
 
 export default function Navbar({ option }: NavbarProps) {
 
-  const deadline = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(0, 0, 0, 0);
+  const deadline = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(23, 59, 59, 999);
 
   return (
     <nav className="w-full flex flex-col items-center">
