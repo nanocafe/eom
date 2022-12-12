@@ -10,7 +10,6 @@
   "dependencies": {
     "@emotion/styled": "^11.10.5",
     "@heroicons/react": "^2.0.13",
-    "@hookform/resolvers": "^2.9.10",
     "@mui/material": "^5.10.17",
     "@nanobyte-crypto/checkout": "^0.1.5",
     "@tanstack/react-query": "^4.19.1",
@@ -31,8 +30,7 @@
     "react-imask": "^6.4.3",
     "react-select": "^5.2.1",
     "sequelize": "^6.21.3",
-    "tailwindcss": "^3.0.0",
-    "yup": "^0.32.11"
+    "tailwindcss": "^3.0.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

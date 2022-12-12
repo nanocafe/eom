@@ -1,33 +1,17 @@
-import Layout from 'components/Layout'
-import Link from 'next/link'
-import Counter from 'components/Counter'
-import api from 'services/api'
-import React, { useEffect, useState } from 'react'
-import { validateNickname, validatePrice } from 'utils/validate'
+import Layout from 'components/Layout';
+import Link from 'next/link';
+import Counter from 'components/Counter';
+import api from 'services/api';
+import React, { useEffect, useState } from 'react';
 import { button } from "@nanobyte-crypto/checkout";
-import { useMutation } from '@tanstack/react-query'
-import ErrorAlert from 'components/Alert'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Controller, useForm } from 'react-hook-form'
-import Input from 'components/Input'
-import Button from 'components/Button'
-import { ArrowLeftCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
-import { DEFAULT_PRICE_GUESS_NANO } from 'core/constants'
-import { convert, Unit } from 'nanocurrency'
-
-const forgotPasswordSchema = yup.object().shape({
-    nickname: yup
-        .string()
-        .required('Nickname required')
-        .min(3, 'Nickname must be at least 3 characters'),
-    address: yup
-        .string()
-        .required('Nano address required'),
-    price: yup
-        .number()
-        .required('Price required')
-})
+import { useMutation } from '@tanstack/react-query';
+import ErrorAlert from 'components/Alert';
+import { Controller, useForm } from 'react-hook-form';
+import Input from 'components/Input';
+import Button from 'components/Button';
+import { ArrowLeftCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid';
+import { DEFAULT_PRICE_GUESS_NANO, MAX_NICKNAME_LENGTH, MIN_NICKNAME_LENGTH } from 'core/constants';
+import { convert, Unit, checkAddress } from 'nanocurrency';
 
 interface IFormData {
     nickname: string;
@@ -39,9 +23,6 @@ const PRICE_GUESS_NANO = convert(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEF
 
 export default function Home() {
 
-    const [price, setPrice] = useState<number>(0);
-    const [nickname, setNickname] = useState<string>('');
-    const [address, setAddress] = useState<string>('');
     const [paymentId, setPaymentId] = useState<string>('');
 
     const paymentButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -50,24 +31,20 @@ export default function Home() {
         mutationFn: (paymentId: string) => api.post('/guesses', {
             paymentId
         })
-    })
+    });
 
     const {
         control,
         handleSubmit,
         formState: { errors, isSubmitting, isValid },
     } = useForm<IFormData>({
+        mode: 'onChange',
         defaultValues: {
             nickname: '',
             address: '',
             price: 1.01,
-        },
-        resolver: yupResolver(forgotPasswordSchema),
-    })
-
-    //         validatePrice(price);
-    //         validateNickname(nickname);
-    //         validateNanoAddress(address);
+        }
+    });
 
     const onSubmit = async (data: IFormData) => {
 
@@ -75,7 +52,7 @@ export default function Home() {
             async () => {
                 return {
                     amount: PRICE_GUESS_NANO,
-                    label: "End Of Month Guess", // Label is what they are paying for
+                    label: "End Of Month Guess",
                     message: "Thank you!",
                     orderNumber: "order#1234",
                     userNickname: data.nickname,
@@ -112,6 +89,8 @@ export default function Home() {
             }
         );
     }, [])
+
+    console.log('errors', errors)
 
     return (
         <Layout navbarOption={{
@@ -158,15 +137,30 @@ export default function Home() {
                                     <Controller
                                         name='nickname'
                                         control={control}
+                                        rules={{
+                                            required: 'Nickname is required',
+                                            minLength: {
+                                                value: MIN_NICKNAME_LENGTH,
+                                                message: `Nickname must be at least ${MIN_NICKNAME_LENGTH} characters`
+                                            },
+                                            maxLength: {
+                                                value: MAX_NICKNAME_LENGTH,
+                                                message: `Nickname must be at most ${MAX_NICKNAME_LENGTH} characters`
+                                            },
+                                            pattern: {
+                                                value: /^[a-z0-9_]*$/,
+                                                message: 'Nickname must be alphanumeric (a-z, 0-9) and lowercase'
+                                            }
+                                        }}
                                         render={({ field }) => (
                                             <Input
                                                 type="text"
                                                 label="Nickname"
                                                 id="nickname"
                                                 className='w-full'
-                                                {...field}
                                                 errorMessage={errors.nickname?.message}
                                                 disabled={isSuccess || isError || isPosting}
+                                                {...field}
                                             />
                                         )}
                                     />
@@ -176,6 +170,17 @@ export default function Home() {
                                     <Controller
                                         name='address'
                                         control={control}
+                                        rules={{
+                                            required: 'Nano address is required',
+                                            validate: {
+                                                isNanoAddress: (value) => {
+                                                    if (checkAddress(value)) {
+                                                        return true;
+                                                    }
+                                                    return 'Invalid Nano address';
+                                                }
+                                            }
+                                        }}
                                         render={({ field }) => (
                                             <Input
                                                 type="text"
@@ -184,8 +189,9 @@ export default function Home() {
                                                 autoComplete="off"
                                                 placeholder="nano_3tsd..."
                                                 className='w-full'
-                                                {...field}
                                                 disabled={isSuccess || isError || isPosting}
+                                                {...field}
+                                                errorMessage={errors.address?.message}
                                             />
                                         )}
                                     />
@@ -226,6 +232,7 @@ export default function Home() {
                                                 <Button
                                                     type='submit'
                                                     loading={isSubmitting || isPosting}
+                                                    disabled={!isValid || isSubmitting || isSuccess || isError || isPosting}
                                                 >
                                                     {
                                                         isPosting ? 'Submiting...' : 'Submit'
