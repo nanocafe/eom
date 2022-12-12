@@ -51,6 +51,7 @@ body {
 
 .loading {
     position: relative;
+    overflow: hidden;
 }
 
 .loading:after {

@@ -4,13 +4,13 @@ import Counter from 'components/Counter';
 import api from 'services/api';
 import React, { useEffect, useState } from 'react';
 import { button } from "@nanobyte-crypto/checkout";
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import ErrorAlert from 'components/Alert';
 import { Controller, useForm } from 'react-hook-form';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import { ArrowLeftCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid';
-import { DEFAULT_PRICE_GUESS_NANO, MAX_NICKNAME_LENGTH, MIN_NICKNAME_LENGTH } from 'core/constants';
+import { DEFAULT_PRICE_GUESS_NANO, MAX_GUESS_PRICE, MAX_NICKNAME_LENGTH, MIN_GUESS_PRICE, MIN_NICKNAME_LENGTH, STEP_GUESS_PRICE } from 'core/constants';
 import { convert, Unit, checkAddress } from 'nanocurrency';
 
 interface IFormData {
@@ -21,11 +21,15 @@ interface IFormData {
 
 const PRICE_GUESS_NANO = convert(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO, { from: Unit.NANO, to: Unit.raw });
 
-export default function Home() {
+export default function Enter() {
 
     const [paymentId, setPaymentId] = useState<string>('');
 
     const paymentButtonRef = React.useRef<HTMLButtonElement>(null);
+
+    const { data: guesses, isLoading } = useQuery(["guesses"], () => api.get("guesses"), {
+        refetchInterval: 5000,
+    });
 
     const { mutate: postGuess, error, isLoading: isPosting, isSuccess, isError } = useMutation({
         mutationFn: (paymentId: string) => api.post('/guesses', {
@@ -48,27 +52,6 @@ export default function Home() {
 
     const onSubmit = async (data: IFormData) => {
 
-        button.setInterceptClick(
-            async () => {
-                return {
-                    amount: PRICE_GUESS_NANO,
-                    label: "End Of Month Guess",
-                    message: "Thank you!",
-                    orderNumber: "order#1234",
-                    userNickname: data.nickname,
-                    userNanoAddress: data.address,
-                    userGuessPrice: data.price
-                };
-            },
-        );
-
-        paymentButtonRef.current?.click();
-
-    }
-
-    useEffect(() => {
-
-        // call this once, when the page has loaded:
         button.init(
             process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '',
             async ({ paymentStatus, paymentId }) => {
@@ -81,16 +64,36 @@ export default function Home() {
         );
 
         button.setRequiredFields(
-            // You can set any required fields for a payment as an array of strings
             ['userNickname', 'userNanoAddress', 'userGuessPrice'],
             (data) => {
                 // This callback will be called if the user clicks trys to make a payment without the required fields
                 alert(data)
             }
         );
-    }, [])
 
-    console.log('errors', errors)
+        await button.setInterceptClick(
+            async () => {
+                return {
+                    amount: PRICE_GUESS_NANO,
+                    label: "End Of Month Guess",
+                    message: "Thank you!",
+                    userNickname: data.nickname,
+                    userNanoAddress: data.address,
+                    userGuessPrice: data.price
+                };
+            },
+        );
+
+        if (paymentButtonRef.current) {
+            paymentButtonRef.current.click();
+        } else {
+            alert("Something went wrong, please try again later.")
+        }
+    }
+
+    if (isLoading) {
+        return <Skeleton />
+    }
 
     return (
         <Layout navbarOption={{
@@ -119,15 +122,41 @@ export default function Home() {
                                     <Controller
                                         name='price'
                                         control={control}
+                                        rules={{
+                                            required: 'Price is required',
+                                            min: {
+                                                value: MIN_GUESS_PRICE,
+                                                message: `Price must be at least ${MIN_GUESS_PRICE}`
+                                            },
+                                            max: {
+                                                value: MAX_GUESS_PRICE,
+                                                message: `Price must be at most ${MAX_GUESS_PRICE}`
+                                            },
+                                            validate: {
+                                                isNumber: (value) => {
+                                                    if (isNaN(value)) {
+                                                        return 'Price must be a number'
+                                                    }
+                                                    return true;
+                                                },
+                                                isUnique: (value) => {
+                                                    if (guesses?.find((guess: any) => guess.price === value)) {
+                                                        return 'Someone already guessed this price'
+                                                    }
+                                                    return true;
+                                                }
+                                            }
+                                        }}
                                         render={({ field }) => (
                                             <Counter
                                                 label="Price Guess (USDT)"
-                                                min={0.01}
-                                                max={9.99}
-                                                step={0.01}
+                                                min={MIN_GUESS_PRICE}
+                                                max={MAX_GUESS_PRICE}
+                                                step={STEP_GUESS_PRICE}
                                                 defaultValue={1.01}
                                                 disabled={isSuccess || isError || isPosting}
                                                 {...field}
+                                                errorMessage={errors.price?.message}
                                             />
                                         )}
                                     />
@@ -150,6 +179,17 @@ export default function Home() {
                                             pattern: {
                                                 value: /^[a-z0-9_]*$/,
                                                 message: 'Nickname must be alphanumeric (a-z, 0-9) and lowercase'
+                                            },
+                                            validate: {
+                                                isUnique: (value) => {
+                                                    if (!value) {
+                                                        return true;
+                                                    }
+                                                    if (guesses.find((guess: any) => guess.nickname === value)) {
+                                                        return 'Nickname already taken for this month';
+                                                    }
+                                                    return true;
+                                                }
                                             }
                                         }}
                                         render={({ field }) => (
@@ -158,9 +198,9 @@ export default function Home() {
                                                 label="Nickname"
                                                 id="nickname"
                                                 className='w-full'
-                                                errorMessage={errors.nickname?.message}
                                                 disabled={isSuccess || isError || isPosting}
                                                 {...field}
+                                                errorMessage={errors.nickname?.message}
                                             />
                                         )}
                                     />
@@ -178,6 +218,15 @@ export default function Home() {
                                                         return true;
                                                     }
                                                     return 'Invalid Nano address';
+                                                },
+                                                isUnique: (value) => {
+                                                    if (!value) {
+                                                        return true;
+                                                    }
+                                                    if (guesses.find((guess: any) => guess.address === value)) {
+                                                        return 'Address already exists in this round';
+                                                    }
+                                                    return true;
                                                 }
                                             }
                                         }}
@@ -187,7 +236,7 @@ export default function Home() {
                                                 label="Nano address"
                                                 id="nano-address"
                                                 autoComplete="off"
-                                                placeholder="nano_3tsd..."
+                                                placeholder="nano_3tsd1sah..."
                                                 className='w-full'
                                                 disabled={isSuccess || isError || isPosting}
                                                 {...field}
@@ -250,4 +299,34 @@ export default function Home() {
         </Layout >
     )
 
+}
+
+const Skeleton = () => {
+    return (
+        <Layout navbarOption={{
+            name: 'Home',
+            href: '/'
+        }}>
+            <main className="w-full mt-2 px-2">
+                <div className="pb-4">
+                    <Link href="/">
+                        <a className="text-base py-1 rounded-sm text-gold flex items-center space-x-1">
+                            <ArrowLeftCircleIcon className="h-5 w-5" />
+                            <span>Back</span>
+                        </a>
+                    </Link>
+                </div>
+
+                <div className="w-full flex justify-center">
+                    <div className="w-full max-w-2xl flex flex-col space-y-6 shadow rounded-md p-4" style={{
+                        backgroundColor: "#3e3e3e"
+                    }}>
+                        <div className="w-full h-16 bg-dim-gray rounded loading" />
+                        <div className="w-full h-16 bg-dim-gray rounded loading" />
+                        <div className="w-full h-16 bg-dim-gray rounded loading" />
+                    </div>
+                </div>
+            </main>
+        </Layout>
+    )
 }
