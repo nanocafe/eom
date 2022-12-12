@@ -84,8 +84,8 @@ export default class Guesses {
             .catch(reject)
     })
 
-    find = async (where: GuessData): Promise<DataValues | null> => {
-        const entry = this.guesses.findOne({ where })
+    find = async (where: any): Promise<DataValues | null> => {
+        const entry = await this.guesses.findOne({ where })
         if (!entry) return null;
         return entry.dataValues;
     }
