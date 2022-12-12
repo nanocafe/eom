@@ -1,0 +1,41 @@
+{
+  "name": "nano-eom",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/styled": "^11.10.5",
+    "@heroicons/react": "^2.0.13",
+    "@mui/material": "^5.10.17",
+    "@nanobyte-crypto/checkout": "^0.1.5",
+    "@tanstack/react-query": "^4.19.1",
+    "autoprefixer": "^10.4.0",
+    "axios": "^1.2.1",
+    "bignumber.js": "^9.1.0",
+    "blakejs": "^1.2.1",
+    "nanocurrency": "^2.5.0",
+    "next": "latest",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "postcss": "^8.4.4",
+    "react": "^17.0.2",
+    "react-countdown": "^2.3.5",
+    "react-dom": "^17.0.2",
+    "react-google-recaptcha": "^2.1.0",
+    "react-hook-form": "^7.40.0",
+    "react-imask": "^6.4.3",
+    "react-select": "^5.2.1",
+    "sequelize": "^6.21.3",
+    "tailwindcss": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/react": "^17.0.34",
+    "@types/react-google-recaptcha": "^2.1.2",
+    "typescript": "^4.4.4"
+  }
+}
