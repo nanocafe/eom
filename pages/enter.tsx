@@ -14,6 +14,7 @@ import { Controller, useForm } from 'react-hook-form'
 import Input from 'components/Input'
 import Button from 'components/Button'
 import { ArrowLeftCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
+import { DEFAULT_PRICE_GUESS_NANO } from 'core/constants'
 
 const forgotPasswordSchema = yup.object().shape({
     nickname: yup
@@ -34,7 +35,7 @@ interface IFormData {
     price: number;
 }
 
-
+const PRICE_GUESS_NANO = toRaws(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO);
 
 export default function Home() {
 
@@ -80,7 +81,7 @@ export default function Home() {
         button.setInterceptClick(
             async () => {
                 return {
-                    amount: toRaws(0.000001),
+                    amount: PRICE_GUESS_NANO,
                     label: "End Of Month Guess", // Label is what they are paying for
                     message: "Thank you!",
                     orderNumber: "order#1234",
