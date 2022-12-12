@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'tailwindcss/tailwind.css';
 import { theme } from '../styles/mui-theme';
 import { ThemeProvider } from '@mui/material/styles';
-import './globals.css';
+import '../styles/globals.css';
 
 const queryClient = new QueryClient();
 
