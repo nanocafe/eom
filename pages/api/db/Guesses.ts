@@ -26,11 +26,10 @@ import DB from './db';
 
 export type DataValues = Record<string, unknown>;
 
-class Guesses {
+export default class Guesses {
 
     guesses: any;
     synced: boolean = false;
-
 
     constructor() {
         this.guesses = DB.define('guesses', {
@@ -89,36 +88,6 @@ class Guesses {
         const entry = this.guesses.findOne({ where })
         if (!entry) return null;
         return entry.dataValues;
-    }
-}
-
-let instance: Guesses;
-
-export default {
-    sync: () => {
-        return instance.sync();
-    },
-    create: (data: GuessData) => {
-        return instance.create(data);
-    },
-    read: (id: number) => {
-        return instance.read(id);
-    },
-    readAll: () => {
-        return instance.readAll();
-    },
-    delete: (id: number) => {
-        return instance.delete(id);
-    },
-    find: (where: GuessData) => {
-        return instance.find(where);
-    },
-    init: () => {
-        if (!instance) {
-            instance = new Guesses();
-            Object.freeze(instance);
-        };
-        return instance;
     }
 }
 

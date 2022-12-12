@@ -11,6 +11,9 @@ const OPEN_DAY = Number(process.env.NEXT_PUBLIC_OPEN_DAY || DEFAULT_OPEN_DAY);
 const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY);
 const PRICE_GUESS_NANO = toRaws(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO);
 const CHECKOUT_API_KEY = process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '';
+
+const guesses = new Guesses();
+guesses.sync();
 interface IPaymentMetadata {
     // Default NanoByte metadata fields
     merchantApiKey: string;
@@ -59,9 +62,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     
     if (req.method === 'GET') {
 
-        Guesses.init();
-        await Guesses.sync();
-        const values = await Guesses.readAll();
+        const values = await guesses.readAll();
         return res.status(200).json(values);
 
     } else if (req.method === 'POST') {
@@ -120,11 +121,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             return res.status(402).json({ error: 'insufficient amount' });
         }
 
-        Guesses.init();
-        await Guesses.sync();
-
         // Save user guess to database
-        Guesses.create({
+        guesses.create({
             nickname: userNickname,
             address: userNanoAddress,
             price: Number(userGuessPrice),
