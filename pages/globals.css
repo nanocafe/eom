@@ -48,3 +48,25 @@ body {
     background-color: #e2b731;
     color: #fff;
 }
+
+.loading {
+    position: relative;
+}
+
+.loading:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-100px);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    animation: loading 0.8s infinite;
+}
+
+@keyframes loading {
+    100% {
+        transform: translateX(100%);
+    }
+}

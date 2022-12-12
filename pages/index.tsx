@@ -84,6 +84,14 @@ export default function Home() {
                 ))}
               </tbody>
             </table>
+
+            {
+              /* Loading Skeleton */
+              isLoading && (
+                <div className='w-full h-20 bg-alt-gray loading' />
+              )
+            }
+
           </div>
 
           <div className="w-full flex justify-center py-4">
