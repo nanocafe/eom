@@ -99,7 +99,7 @@ export default function Home() {
 
         // call this once, when the page has loaded:
         button.init(
-            process.env.NEXT_PUBLIC_NANO_CHECKOUT_API_KEY || '',
+            process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '',
             async ({ paymentStatus, paymentId }) => {
                 // this callback will be called when a payment has been completed
                 console.log('payment status', { paymentStatus, paymentId });
