@@ -44,8 +44,6 @@ export default function Counter({ label, min, max, step, value: _value, defaultV
         onChange && onChange(Number(event.target.value));
     };
 
-    console.log('props', props)
-
     return (
         <Input
             type="number"

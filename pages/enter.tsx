@@ -49,14 +49,7 @@ export default function Home() {
     const { mutate: postGuess, error, isLoading: isPosting, isSuccess, isError } = useMutation({
         mutationFn: (paymentId: string) => api.post('/guesses', {
             paymentId
-        }),
-        onSuccess: (response) => {
-            // Invalidate and refetch
-            console.log('response', response)
-        },
-        onError: (error) => {
-            console.log('error', error);
-        }
+        })
     })
 
     const {
@@ -103,7 +96,6 @@ export default function Home() {
             process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '',
             async ({ paymentStatus, paymentId }) => {
                 // this callback will be called when a payment has been completed
-                console.log('payment status', { paymentStatus, paymentId });
                 if (paymentStatus === 'confirmed') {
                     setPaymentId(paymentId);
                     postGuess(paymentId);
@@ -116,7 +108,7 @@ export default function Home() {
             ['userNickname', 'userNanoAddress', 'userGuessPrice'],
             (data) => {
                 // This callback will be called if the user clicks trys to make a payment without the required fields
-                console.log(data);
+                alert(data)
             }
         );
     }, [])
