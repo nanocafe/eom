@@ -21,7 +21,7 @@ Params:
 */
 
 import { DOUBLE, INTEGER, STRING } from 'sequelize';
-import { GuessData } from '../types';
+import { GuessData } from 'types.ts/guess';
 import DB from './db';
 
 export type DataValues = Record<string, unknown>;
