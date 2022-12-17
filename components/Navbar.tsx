@@ -72,7 +72,7 @@ export default function Navbar({ option }: NavbarProps) {
               ) : (
                 <div className='text-xs sm:text-sm flex flex-col sm:flex-row space-x-2 sm:items-center'>
                   <div>Nano Price:</div>
-                  <div className="text-base font-bold text-green-400" id="nano-price">${price?.price.toFixed(2)}</div>
+                  <div className="text-base font-bold text-green-400" id="nano-price">${price?.price.toString().match(/^-?\d+(?:\.\d{0,3})?/)[0]}</div>
                 </div>
               )
             }
