@@ -1,6 +1,8 @@
+import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_CLOSE_DAY } from 'core/constants';
 import Link from 'next/link'
 import { useEffect, useState } from 'react';
+import API from 'services/api';
 import Button from './Button'
 import CountdownViewer from './CountdownViewer';
 
@@ -18,6 +20,8 @@ export interface NavbarProps {
 export default function Navbar({ option }: NavbarProps) {
 
   const deadline = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(23, 59, 59, 999);
+
+  const { data: price, error, isLoading } = useQuery(['price'], () => API.get('/price'));
 
   return (
     <nav className="w-full flex flex-col items-center">
@@ -58,15 +62,25 @@ export default function Navbar({ option }: NavbarProps) {
       <div className='w-full bg-alt-gray flex justify-center'>
         <div className="w-full max-w-7xl flex justify-between items-center px-2">
           <div id="info-section" className='w-full flex flex-wrap justify-between sm:items-center py-2 bg-alt-gray'>
-            <div className='text-xs sm:text-sm flex flex-col sm:flex-row space-x-2 sm:items-center'>
-              <div>Nano Price:</div>
-              <div className="text-base font-bold text-green-400" id="nano-price">$0.74</div>
-            </div>
-            <CountdownViewer date={deadline} />
+            {
+              isLoading ? (
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-gray-400 rounded-full animate-pulse' />
+                  <div className='w-2 h-2 bg-gray-400 rounded-full animate-pulse' />
+                  <div className='w-2 h-2 bg-gray-400 rounded-full animate-pulse' />
+                </div>
+              ) : (
+                <div className='text-xs sm:text-sm flex flex-col sm:flex-row space-x-2 sm:items-center'>
+                  <div>Nano Price:</div>
+                  <div className="text-base font-bold text-green-400" id="nano-price">${price.price.toFixed(2)}</div>
+                </div>
+              )
+            }
           </div>
+          <CountdownViewer date={deadline} />
         </div>
       </div>
 
-    </nav>
+    </nav >
   )
 }

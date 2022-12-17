@@ -16,6 +16,6 @@
     "baseUrl": ".",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.js", "**/*.tsx", "next.config.js", "lib/nano/rpc.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.js", "**/*.tsx", "next.config.js", "types"],
   "exclude": ["node_modules"]
 }

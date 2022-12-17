@@ -1,6 +1,6 @@
 import { MAX_NICKNAME_LENGTH, MIN_NICKNAME_LENGTH } from "core/constants";
 import { checkAddress } from 'nanocurrency';
-import { IPaymentMetadata } from "types.ts/checkout";
+import { IPaymentMetadata } from "types/checkout";
 
 export const validatePrice = (price: number) => {
     if (typeof price !== 'number' || price <= 0) {
