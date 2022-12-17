@@ -27,9 +27,10 @@ export default function Enter() {
 
     const paymentButtonRef = React.useRef<HTMLButtonElement>(null);
 
-    const { data: guesses, isLoading } = useQuery(["guesses"], () => api.get("guesses"), {
+    const { data: guesses, isLoading: isGuessesLoading } = useQuery(["guesses"], () => api.get("guesses"), {
         refetchInterval: 5000,
     });
+    const { data: price, error: priceError, isLoading: isPriceLoading } = useQuery(['price'], () => api.get('/price'));
 
     const { mutate: postGuess, error, isLoading: isPosting, isSuccess, isError } = useMutation({
         mutationFn: (paymentId: string) => api.post('/guesses', {
@@ -91,7 +92,7 @@ export default function Enter() {
         }
     }
 
-    if (isLoading) {
+    if (isGuessesLoading || isPriceLoading) {
         return <Skeleton />
     }
 
@@ -153,7 +154,7 @@ export default function Enter() {
                                                 min={MIN_GUESS_PRICE}
                                                 max={MAX_GUESS_PRICE}
                                                 step={STEP_GUESS_PRICE}
-                                                defaultValue={1.01}
+                                                defaultValue={price.price}
                                                 disabled={isSuccess || isError || isPosting}
                                                 {...field}
                                                 errorMessage={errors.price?.message}
