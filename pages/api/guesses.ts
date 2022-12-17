@@ -127,7 +127,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             // Ensure price is not registered for this month competition
             const priceExists = await prisma.guess.findFirst({
                 where: {
-                    price,
+                    price: Number(price),
                     ...thisMonth
                 }
             });
