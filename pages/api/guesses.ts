@@ -144,7 +144,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                     nickname,
                     address: address.replace("xrb_", "nano_"),
                     price: Number(price),
-                    hash: json.paymentHash,
+                    hash: payment.metadata.paymentHash,
                 }
             })
 

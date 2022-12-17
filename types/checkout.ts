@@ -5,6 +5,8 @@ export interface IPaymentMetadata {
     merchantName: string;
     amount: string;
     label: string;
+    paymentHash: string;
+    settlementHash: string;
 
     // Custom NanoCafe metadata fields
     userNickname: string;
