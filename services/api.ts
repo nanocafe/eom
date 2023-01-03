@@ -24,11 +24,9 @@ function createAPI(baseURL: string, timeout = TIMEOUT) {
     if (error.response) {
 
       throw (
-        typeof error.response.data === "object"
-          ? "error" in error.response.data
-            ? error.response.data.error
-            : "errors" in error.response.data ? error.response.data.errors[0] : JSON.stringify(error.response.data)
-          : error.response.data
+        typeof error.response.data === "object" && "message" in error.response.data
+            ? error.response.data.message
+            : "Invalid server response"
       )
 
     } else if (error.request) {

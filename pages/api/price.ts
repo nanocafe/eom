@@ -33,7 +33,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     } catch (e) {
         console.log("error", e)
         res.status(500).json({
-            error: "Unable to fetch price",
+            message: "Unable to fetch price",
         });
     }
 }

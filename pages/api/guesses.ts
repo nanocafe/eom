@@ -37,11 +37,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             const today = () => new Date().getDate();
 
             // Competition of the month not yet started
-            if (today() < OPEN_DAY) return res.status(400).json({ error: "not started yet" })
+            if (today() < OPEN_DAY) return res.status(400).json({ message: "not started yet" })
 
             // Competition of the month finished
             if (today() >= CLOSE_DAY + 1) {
-                return res.status(400).json({ error: "finished" })
+                return res.status(400).json({ message: "finished" })
             }
 
             // Parse user json request 
@@ -51,7 +51,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                     json = JSON.parse(req.body)
                 } catch (e) {
                     return res.status(400).json({
-                        error: "unable to parse JSON"
+                        message: "unable to parse JSON"
                     });
                 }
             }
@@ -69,7 +69,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
             if (payment.status !== 'confirmed') {
                 return res.status(400).json({
-                    error: 'payment not confirmed'
+                    message: 'payment not confirmed'
                 });
             }
 
@@ -78,7 +78,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 validateGuess(payment.metadata);
             } catch (err) {
                 return res.status(400).json({
-                    error: err
+                    message: err
                 });
             }
 
@@ -87,7 +87,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
             // Ensure user has paid enough
             if (TunedBigNumber(amount).isLessThan(PRICE_GUESS_NANO)) {
-                return res.status(402).json({ error: 'insufficient amount' });
+                return res.status(402).json({ message: 'insufficient amount' });
             }
 
             // Ensure nikcname is not registered for this month competition
@@ -100,7 +100,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
             if (nicknameExists) {
                 return res.status(400).json({
-                    error: 'nickname already exists'
+                    message: 'nickname already exists'
                 });
             }
 
@@ -114,7 +114,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
             if (addressExists) {
                 return res.status(400).json({
-                    error: 'address already exists'
+                    message: 'address already exists'
                 });
             }
 
@@ -128,7 +128,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
             if (priceExists) {
                 return res.status(400).json({
-                    error: 'price already exists'
+                    message: 'price already exists'
                 });
             }
 
@@ -136,7 +136,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             const ip = req.headers['x-forwarded-for'];
             if (typeof ip !== 'string') {
                 return res.status(400).json({
-                    error: 'ip not found'
+                    message: 'ip not found'
                 });
             }
 
@@ -151,12 +151,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 // Ensure IP is not registered for this month competition
                 if (!!ipData.lastGuessAt && ipData.lastGuessAt >= new Date(startDate)) {
                     return res.status(400).json({
-                        error: 'ip already exists'
+                        message: 'ip already exists'
                     });
                 }
             } else {
                 return res.status(400).json({
-                    error: 'ip not found'
+                    message: 'ip not found'
                 });
             }
 
@@ -193,7 +193,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     } catch (err) {
         console.error(err);
         return res.status(500).json({
-            error: err
+            message: err
         });
     }
 }
