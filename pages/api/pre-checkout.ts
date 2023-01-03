@@ -14,6 +14,17 @@ const startDate = new Date(new Date().setUTCDate(DEFAULT_OPEN_DAY)).setUTCHours(
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     try {
+
+        // If running locally, skip the ip validation
+        if (process.env.NODE_ENV === 'development') {
+            // await 2 seconds to simulate the ip validation
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            return res.status(200).json({
+                success: true,
+                message: 'ip validation skipped'
+            });
+        }
+
         /*
            The public IP address of the client that made the request.
            If the client is behind a proxy, Vercel behind currently overwrite the X-Forwarded-For
