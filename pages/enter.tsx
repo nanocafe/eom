@@ -2,8 +2,8 @@ import Layout from 'components/Layout';
 import Link from 'next/link';
 import Counter from 'components/Counter';
 import api from 'services/api';
-import React, { useEffect, useState } from 'react';
-import { button } from "@nanobyte-crypto/checkout";
+import React, { useState } from 'react';
+import { button as checkout } from "@nanobyte-crypto/checkout";
 import { useMutation, useQuery } from '@tanstack/react-query';
 import ErrorAlert from 'components/Alert';
 import { Controller, useForm } from 'react-hook-form';
@@ -53,7 +53,7 @@ export default function Enter() {
 
     const onSubmit = async (data: IFormData) => {
 
-        button.init(
+        checkout.init(
             process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '',
             async ({ paymentStatus, paymentId }) => {
                 // this callback will be called when a payment has been completed
@@ -64,7 +64,7 @@ export default function Enter() {
             }
         );
 
-        button.setRequiredFields(
+        checkout.setRequiredFields(
             ['userNickname', 'userNanoAddress', 'userGuessPrice'],
             (data) => {
                 // This callback will be called if the user clicks trys to make a payment without the required fields
@@ -72,7 +72,7 @@ export default function Enter() {
             }
         );
 
-        await button.setInterceptClick(
+        await checkout.setInterceptClick(
             async () => {
                 return {
                     amount: PRICE_GUESS_NANO,
