@@ -1,17 +1,11 @@
 import axios from "axios";
-import { DEFAULT_CLOSE_DAY, DEFAULT_OPEN_DAY, DEFAULT_PRICE_GUESS_NANO } from "core/constants";
 import { NextApiRequest, NextApiResponse } from "next";
 import { validateGuess } from "utils/validate";
-import { convert, Unit } from 'nanocurrency';
 import { TunedBigNumber } from "utils/nano";
 import { IPaymentResponse } from "types/checkout";
 import { GuessData } from "types/guess";
 import prisma from "lib/prisma";
-
-const OPEN_DAY = Number(process.env.NEXT_PUBLIC_OPEN_DAY || DEFAULT_OPEN_DAY);
-const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY);
-const PRICE_GUESS_NANO = convert(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO, { from: Unit.NANO, to: Unit.raw });
-const CHECKOUT_API_KEY = process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '';
+import { CHECKOUT_API_KEY, CLOSE_DAY, OPEN_DAY, PRICE_GUESS_NANO } from "config/config";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
@@ -138,7 +132,45 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 });
             }
 
-            // Save user guess to database with prisma
+            // Get user IP
+            const ip = req.headers['x-forwarded-for'];
+            if (typeof ip !== 'string') {
+                return res.status(400).json({
+                    error: 'ip not found'
+                });
+            }
+
+            const ipData = await prisma.iPs.findFirst({
+                where: {
+                    ip
+                }
+            });
+
+            // Ensure the ip data exists
+            if (ipData) {
+                // Ensure IP is not registered for this month competition
+                if (!!ipData.lastGuessAt && ipData.lastGuessAt >= new Date(startDate)) {
+                    return res.status(400).json({
+                        error: 'ip already exists'
+                    });
+                }
+            } else {
+                return res.status(400).json({
+                    error: 'ip not found'
+                });
+            }
+
+            // Update IP last guess date
+            await prisma.iPs.update({
+                where: {
+                    ip
+                },
+                data: {
+                    lastGuessAt: new Date()
+                }
+            });
+
+            // Save user guess to database
             const resp = await prisma.guess.create({
                 data: {
                     nickname,
@@ -149,7 +181,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             })
 
             return res.status(200).json({
-                successful: true,
+                success: true,
                 ...resp
             });
 
