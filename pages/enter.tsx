@@ -33,6 +33,8 @@ const PRICE_GUESS_NANO = convert(
 
 export default function Enter() {
   const [paymentId, setPaymentId] = useState<string>('')
+  const [paymentPending, setPaymentPending] = useState<boolean>(false)
+
   const paymentButtonRef = React.useRef<HTMLButtonElement>(null)
 
   const { data: guesses, isLoading: isGuessesLoading } = useQuery(
@@ -85,6 +87,7 @@ export default function Enter() {
     refetchOnWindowFocus: false,
     onSuccess: () => {
       if (paymentButtonRef.current) {
+        setPaymentPending(true)
         paymentButtonRef.current.click()
       } else {
         alert('Something went wrong, please try again later.')
@@ -94,7 +97,8 @@ export default function Enter() {
 
   // Hack isLoading for react-query v4 with "enabled: false"
   // Read more: https://github.com/TanStack/query/issues/3584#issuecomment-1369491188
-  const isPreCheckoutLoading = preCheckoutRefetching || preCheckoutInitialLoading
+  const isPreCheckoutLoading =
+    preCheckoutRefetching || preCheckoutInitialLoading
 
   const onSubmit = async (data: IFormData) => {
     await makePreCheckout()
@@ -106,7 +110,12 @@ export default function Enter() {
         if (paymentStatus === 'confirmed') {
           setPaymentId(paymentId)
           postGuess(paymentId)
+        } else if (paymentStatus === 'cancelled') {
+          console.warn('Payment cancelled')
+        } else {
+          alert('Something went wrong, please try again later.')
         }
+        setPaymentPending(false)
       },
     )
 
@@ -339,17 +348,25 @@ export default function Enter() {
                 ) : (
                   <Button
                     type="submit"
-                    loading={isSubmitting || isPosting || isPreCheckoutLoading}
+                    loading={
+                      isSubmitting ||
+                      isPosting ||
+                      isPreCheckoutLoading ||
+                      paymentPending
+                    }
                     disabled={
                       !isValid ||
                       isSubmitting ||
                       isSuccess ||
                       isError ||
                       isPreCheckoutLoading ||
-                      isPosting
+                      isPosting ||
+                      paymentPending
                     }
                   >
-                    {isPosting
+                    {paymentPending
+                      ? 'Waiting for payment...'
+                      : isPosting
                       ? 'Submiting...'
                       : isPreCheckoutLoading
                       ? 'Processing...'
