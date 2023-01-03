@@ -21,10 +21,10 @@ model Guess {
 }
 
 model IPs {
-  id        Int      @id @default(autoincrement())
-  ip        String   @unique
-  isProxy   Boolean
-  lastGuessAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int       @id @default(autoincrement())
+  ip          String    @unique
+  isProxy     Boolean
+  lastGuessAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
