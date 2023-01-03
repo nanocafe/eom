@@ -47,7 +47,7 @@ export default function Enter() {
         defaultValues: {
             nickname: '',
             address: '',
-            price: 1.01,
+            price: 0,
         }
     });
 
