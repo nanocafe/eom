@@ -46,7 +46,6 @@ export default function Enter() {
   )
   const {
     data: price,
-    error: priceError,
     isLoading: isPriceLoading,
   } = useQuery(['price'], () => api.get('/price'))
 
