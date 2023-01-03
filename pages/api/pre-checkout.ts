@@ -75,7 +75,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 data: {
                     ip,
                     isProxy: proxy,
-                    lastGuessAt: ''
+                    lastGuessAt: null
                 }
             });
 
