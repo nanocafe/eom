@@ -33,7 +33,6 @@ const PRICE_GUESS_NANO = convert(
 
 export default function Enter() {
   const [paymentId, setPaymentId] = useState<string>('')
-  const [preCheckoutError, setPreCheckoutError] = useState<string>('')
   const paymentButtonRef = React.useRef<HTMLButtonElement>(null)
 
   const { data: guesses, isLoading: isGuessesLoading } = useQuery(
@@ -75,13 +74,30 @@ export default function Enter() {
     },
   })
 
+  const {
+    isInitialLoading: preCheckoutInitialLoading,
+    isRefetching: preCheckoutRefetching,
+    error: preCheckoutError,
+    refetch: makePreCheckout,
+  } = useQuery(['pre-checkout'], () => api.get('/pre-checkout'), {
+    cacheTime: 0,
+    enabled: false,
+    refetchOnWindowFocus: false,
+    onSuccess: () => {
+      if (paymentButtonRef.current) {
+        paymentButtonRef.current.click()
+      } else {
+        alert('Something went wrong, please try again later.')
+      }
+    },
+  })
+
+  // Hack isLoading for react-query v4 with "enabled: false"
+  // Read more: https://github.com/TanStack/query/issues/3584#issuecomment-1369491188
+  const isPreCheckoutLoading = preCheckoutRefetching || preCheckoutInitialLoading
+
   const onSubmit = async (data: IFormData) => {
-    try {
-      await api.get('/pre-checkout')
-    } catch (e: any) {
-      setPreCheckoutError(e)
-      return
-    }
+    await makePreCheckout()
 
     checkout.init(
       process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '',
@@ -112,12 +128,6 @@ export default function Enter() {
         userGuessPrice: data.price,
       }
     })
-
-    if (paymentButtonRef.current) {
-      paymentButtonRef.current.click()
-    } else {
-      alert('Something went wrong, please try again later.')
-    }
   }
 
   if (isGuessesLoading || isPriceLoading) {
@@ -329,16 +339,21 @@ export default function Enter() {
                 ) : (
                   <Button
                     type="submit"
-                    loading={isSubmitting || isPosting}
+                    loading={isSubmitting || isPosting || isPreCheckoutLoading}
                     disabled={
                       !isValid ||
                       isSubmitting ||
                       isSuccess ||
                       isError ||
+                      isPreCheckoutLoading ||
                       isPosting
                     }
                   >
-                    {isPosting ? 'Submiting...' : 'Submit'}
+                    {isPosting
+                      ? 'Submiting...'
+                      : isPreCheckoutLoading
+                      ? 'Processing...'
+                      : 'Submit'}
                   </Button>
                 )}
               </div>
