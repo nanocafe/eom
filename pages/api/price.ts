@@ -1,8 +1,6 @@
+import { CONVERT_SYMBOL, XNO_CURRENCY_ID } from "config/config";
 import { NextApiRequest, NextApiResponse } from "next";
 import getPrice from "services/coinmarketcap";
-
-const XNO_CURRENCY_ID = 1567;
-const CONVERT_SYMBOL = "USD";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     try {
