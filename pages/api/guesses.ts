@@ -3,9 +3,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { validateGuess } from "utils/validate";
 import { TunedBigNumber } from "utils/nano";
 import { IPaymentResponse } from "types/checkout";
-import { GuessData } from "types/guess";
+import { GuessComplete, GuessData } from "types/guess";
 import prisma from "lib/prisma";
-import { CHECKOUT_API_KEY, CLOSE_DAY, OPEN_DAY, PRICE_GUESS_NANO } from "config/config";
+import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, PRICE_GUESS_NANO, XNO_CURRENCY_ID } from "config/config";
+import getPrice from "services/coinmarketcap";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
@@ -23,14 +24,114 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
         if (req.method === 'GET') {
 
+            const allowedSortBy = ['position', 'createdAt', 'price', 'nickname'];
+            const allowedOrderBy = ['asc', 'desc'];
+
+            const { page: _page = 1, limit: _limit = 10, sortBy = 'position', orderBy = 'asc' } = req.query;
+
+            const page = Number(_page);
+            const limit = Number(_limit);
+
+            if (typeof page !== 'number' || page < 1) {
+                return res.status(400).json({
+                    message: 'invalid page'
+                });
+            }
+
+            if (typeof limit !== 'number' || limit < 1) {
+                return res.status(400).json({
+                    message: 'invalid limit'
+                });
+            }
+
+            if (typeof sortBy !== 'string' || !allowedSortBy.includes(sortBy)) {
+                return res.status(400).json({
+                    message: 'invalid sortBy'
+                });
+            }
+
+            if (typeof orderBy !== 'string' || !allowedOrderBy.includes(orderBy)) {
+                return res.status(400).json({
+                    message: 'invalid orderBy'
+                });
+            }
+
+            const prismaOrderBy = sortBy === 'position' ? undefined : {
+                [sortBy]: orderBy
+            }
+
+            const { price } = await getPrice(XNO_CURRENCY_ID, CONVERT_SYMBOL);
+
             // Get all guesses from the current month
-            const values = await prisma.guess.findMany({
-                where: {
-                    ...thisMonth
+            const allGuesses = await prisma.guess.findMany({
+                where: thisMonth,
+                orderBy: prismaOrderBy,
+            });
+
+            const response = {
+                total: allGuesses.length,
+                values: [] as GuessComplete[]
+            }
+
+            //  Add position to each guess and sort by position
+            response.values = allGuesses.map((guess, index) => {
+                const diff = Math.abs(guess.price - price);
+                return {
+                    ...guess,
+                    position: index,
+                    diff
+                }
+            })
+            .sort((a, b) => a.diff - b.diff)
+            .map((guess, index) => {
+                return {
+                    ...guess,
+                    position: index + 1
                 }
             });
 
-            return res.status(200).json(values);
+            /* Since we need sort to add position, we should sort by the other fields manually */
+
+            if (sortBy === 'createdAt') {
+                response.values = response.values.sort((a, b) => {
+                    if (a.createdAt < b.createdAt) {
+                        return orderBy === 'asc' ? -1 : 1;
+                    }
+                    if (a.createdAt > b.createdAt) {
+                        return orderBy === 'asc' ? 1 : -1;
+                    }
+                    return 0;
+                });
+            }
+            
+            if (sortBy === 'nickname') {
+                response.values = response.values.sort((a, b) => {
+                    if (a.nickname < b.nickname) {
+                        return orderBy === 'asc' ? -1 : 1;
+                    }
+                    if (a.nickname > b.nickname) {
+                        return orderBy === 'asc' ? 1 : -1;
+                    }
+                    return 0;
+                });
+            }
+
+            if (sortBy === 'price') {
+                response.values = response.values.sort((a, b) => {
+                    if (a.price < b.price) {
+                        return orderBy === 'asc' ? -1 : 1;
+                    }
+                    if (a.price > b.price) {
+                        return orderBy === 'asc' ? 1 : -1;
+                    }
+                    return 0;
+                });
+            }
+
+            return res.status(200).json({
+                total: response.values.length,
+                values: response.values.slice((page - 1) * limit, page * limit)
+            });
 
         } else if (req.method === 'POST') {
 
