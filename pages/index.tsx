@@ -44,7 +44,7 @@ export default function Home() {
                 textShadow: '0 0 5px #e2b731',
               }}
             >
-              100 NANO
+              100 XNO
             </h3>
             <div className="text-gray-300 mt-1 flex space-x-4">
               <span>________</span>{' '}
@@ -95,7 +95,7 @@ export default function Home() {
                       scope="col"
                       className="flex-1 flex items-center justify-center py-3.5 px-2 sm:px-4 pr-3 text-sm font-semibold text-gray-200"
                     >
-                      Position
+                      Ranking
                     </th>
                     <th
                       scope="col"
@@ -107,7 +107,7 @@ export default function Home() {
                       scope="col"
                       className="flex-1 flex items-center justify-center py-3.5 px-2 sm:px-4 pr-3 text-sm font-semibold text-gray-200"
                     >
-                      $ Price Guess
+                      $ Price Guessed
                     </th>
                   </tr>
                 </thead>
