@@ -1,10 +1,10 @@
-import { CONVERT_SYMBOL, XNO_CURRENCY_ID } from "config/config";
+import { CONVERT_SYMBOL, COIN_ID } from "config/config";
 import { NextApiRequest, NextApiResponse } from "next";
-import getPrice from "services/coinmarketcap";
+import { getLatestPrice } from "services/coingecko";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     try {
-        const data = await getPrice(XNO_CURRENCY_ID, CONVERT_SYMBOL);
+        const data = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
         res.status(200).json(data);
     } catch (e) {
         console.error("error", e)

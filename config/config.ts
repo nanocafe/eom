@@ -9,10 +9,8 @@ export const PRICE_GUESS_NANO = convert(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO
 
 export const CHECKOUT_API_KEY = process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '';
 
-export const CMC_API_KEY = process.env.CMC_API_KEY || '';
+export const PRICE_CACHE_TIME = 60 * 1000; // 1 minute in milliseconds
 
-export const PRICE_CACHE_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
+export const COIN_ID = 'nano';
 
-export const XNO_CURRENCY_ID = 1567;
-
-export const CONVERT_SYMBOL = "USD";
+export const CONVERT_SYMBOL = "usd";

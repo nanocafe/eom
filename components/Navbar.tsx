@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { CONVERT_SYMBOL } from 'config/config';
 import { DEFAULT_CLOSE_DAY } from 'core/constants';
 import Link from 'next/link'
-import { useEffect, useState } from 'react';
 import API from 'services/api';
+import { classNames } from 'utils';
 import Button from './Button'
 import CountdownViewer from './CountdownViewer';
 
@@ -72,7 +73,10 @@ export default function Navbar({ option }: NavbarProps) {
               ) : (
                 <div className='text-xs sm:text-sm flex flex-col sm:flex-row space-x-2 sm:items-center'>
                   <div>Nano Price:</div>
-                  <div className="text-base font-bold text-green-400" id="nano-price">${price?.price.toString().match(/^-?\d+(?:\.\d{0,3})?/)[0]}</div>
+                  <div className={classNames(
+                    "text-base font-bold text-green-400",
+                    price.usd_24h_change > 0 ? 'text-green-400' : 'text-red-400'
+                  )} id="nano-price">${price?.[CONVERT_SYMBOL].toString().match(/^-?\d+(?:\.\d{0,3})?/)[0]}</div>
                 </div>
               )
             }

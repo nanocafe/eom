@@ -5,8 +5,8 @@ import { TunedBigNumber } from "utils/nano";
 import { IPaymentResponse } from "types/checkout";
 import { GuessComplete, GuessData } from "types/guess";
 import prisma from "lib/prisma";
-import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, PRICE_GUESS_NANO, XNO_CURRENCY_ID } from "config/config";
-import getPrice from "services/coinmarketcap";
+import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, PRICE_GUESS_NANO, COIN_ID } from "config/config";
+import { getLatestPrice } from "services/coingecko";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
@@ -60,7 +60,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 [sortBy]: orderBy
             }
 
-            const { price } = await getPrice(XNO_CURRENCY_ID, CONVERT_SYMBOL);
+            const { [CONVERT_SYMBOL]: price } = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
 
             // Get all guesses from the current month
             const allGuesses = await prisma.guess.findMany({
