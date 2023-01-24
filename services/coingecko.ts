@@ -1,6 +1,6 @@
 import axios from "axios";
 import cache from "memory-cache";
-import { PRICE_CACHE_TIME } from "config/config";
+import { LATEST_PRICE_CACHE_TIME } from "config/config";
 
 export const getLatestPrice = async (coinId: string, convertTo: string, with24hChange = true) => {
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coinId.toLowerCase()}&vs_currencies=${convertTo.toLowerCase()}&include_24hr_change=${with24hChange}`;
@@ -10,7 +10,7 @@ export const getLatestPrice = async (coinId: string, convertTo: string, with24hC
     } else {
         const response = await axios.get(url);
         const data = response.data[coinId.toLowerCase()];
-        cache.put(url, data, 1);
+        cache.put(url, data, LATEST_PRICE_CACHE_TIME);
         return data;
     }
 }

@@ -9,7 +9,7 @@ export const PRICE_GUESS_NANO = convert(process.env.NEXT_PUBLIC_PRICE_GUESS_NANO
 
 export const CHECKOUT_API_KEY = process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '';
 
-export const PRICE_CACHE_TIME = 60 * 1000; // 1 minute in milliseconds
+export const LATEST_PRICE_CACHE_TIME = 60 * 1000; // 1 minute in milliseconds
 
 export const COIN_ID = 'nano';
 
