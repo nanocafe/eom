@@ -8,6 +8,9 @@ import prisma from "lib/prisma";
 import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, PRICE_GUESS_NANO, COIN_ID } from "config/config";
 import { getLatestPrice } from "services/coingecko";
 
+const allowedSortBy = ['position', 'createdAt', 'price', 'nickname'];
+const allowedOrderBy = ['asc', 'desc'];
+
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     try {
@@ -23,9 +26,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         if (req.method === 'GET') {
-
-            const allowedSortBy = ['position', 'createdAt', 'price', 'nickname'];
-            const allowedOrderBy = ['asc', 'desc'];
 
             const { page: _page = 1, limit: _limit = 10, sortBy = 'position', orderBy = 'asc' } = req.query;
 
@@ -56,16 +56,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 });
             }
 
-            const prismaOrderBy = sortBy === 'position' ? undefined : {
-                [sortBy]: orderBy
-            }
-
             const { [CONVERT_SYMBOL]: price } = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
 
             // Get all guesses from the current month
             const allGuesses = await prisma.guess.findMany({
                 where: thisMonth,
-                orderBy: prismaOrderBy,
             });
 
             const response = {
