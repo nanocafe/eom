@@ -8,7 +8,9 @@ export const getLatestPrice = async (coinId: string, convertTo: string, with24hC
     if (cachedResponse) {
         return cachedResponse;
     } else {
-        const response = await axios.get(url);
+        const response = await axios.get(url, {
+            headers: { "Accept-Encoding": "gzip,deflate,compress" }
+        });
         const data = response.data[coinId.toLowerCase()];
         cache.put(url, data, LATEST_PRICE_CACHE_TIME);
         return data;
@@ -16,12 +18,23 @@ export const getLatestPrice = async (coinId: string, convertTo: string, with24hC
 }
 
 export const getRangePrice = async (coinId: string, convertTo: string, from: number, to: number) => {
+
+    // Coingecko API expects timestamps in seconds, not milliseconds
+    if (from.toString().length === 13) {
+        from = Math.floor(from / 1000);
+    }
+    if (to.toString().length === 13) {
+        to = Math.floor(to / 1000);
+    }
+
     const url = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart/range?vs_currency=${convertTo}&from=${from}&to=${to}`;
     const cachedResponse = cache.get(url);
     if (cachedResponse) {
         return cachedResponse;
     } else {
-        const response = await axios.get(url);
+        const response = await axios.get(url, {
+            headers: { "Accept-Encoding": "gzip,deflate,compress" }
+        });
         const { prices } = response.data;
         cache.put(url, prices, 60 * 60 * 1000 * 7); // 7 days in milliseconds
         return prices;
