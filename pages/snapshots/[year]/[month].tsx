@@ -8,7 +8,7 @@ import api from 'services/api'
 const DEFAULT_PAGINATION_LIMIT = 10
 
 export default function SnapshotsPage() {
-  const { query } = useRouter()
+  const { query, isReady } = useRouter()
 
   const year = Number(query.year)
   const month = Number(query.month)
@@ -19,6 +19,9 @@ export default function SnapshotsPage() {
   const { data: snapshot, isError, error, isLoading, refetch } = useQuery(
     ['guesses', year, month],
     () => api.get(`snapshots/${year}/${month}?page=${currentPage}&limit=${limit}`),
+    {
+      enabled: !isNaN(year) && !isNaN(month),
+    }
   )
 
   useEffect(() => {
@@ -27,16 +30,12 @@ export default function SnapshotsPage() {
     }
   }, [currentPage, limit])
 
-  if (isNaN(year) || isNaN(month)) {
+  if (isReady && (isNaN(year) || isNaN(month))) {
     return <div>Invalid year or month</div>
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
   if (isError) {
-    console.log('Error:', error)
+    console.error('Error:', error)
     return <div>We got an error. Check console!</div>
   }
 
@@ -61,7 +60,7 @@ export default function SnapshotsPage() {
         <LeaderBoard
           guesses={snapshot?.values || []}
           total={snapshot?.total}
-          isLoading={isLoading}
+          isLoading={isLoading || !isReady}
           limit={limit}
           currentPage={currentPage}
           onLimitChange={setLimit}
