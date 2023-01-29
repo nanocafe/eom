@@ -9,5 +9,4 @@ export interface GuessComplete extends GuessData {
     id: number;
     position: number;
     createdAt: Date;
-    updatedAt: Date;
 }
