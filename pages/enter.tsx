@@ -173,19 +173,19 @@ export default function Enter() {
                     name="price"
                     control={control}
                     rules={{
-                      required: 'Price is required',
+                      required: 'A Price Guess is required!',
                       min: {
                         value: MIN_GUESS_PRICE,
-                        message: `Price must be at least ${MIN_GUESS_PRICE}`,
+                        message: `Price Guess must be at least ${MIN_GUESS_PRICE}`,
                       },
                       max: {
                         value: MAX_GUESS_PRICE,
-                        message: `Price must be at most ${MAX_GUESS_PRICE}`,
+                        message: `Price Guess must be at most ${MAX_GUESS_PRICE}`,
                       },
                       validate: {
                         isNumber: (value) => {
                           if (isNaN(value)) {
-                            return 'Price must be a number'
+                            return 'Price Guess must be a number!'
                           }
                           return true
                         },
@@ -193,7 +193,7 @@ export default function Enter() {
                           if (
                             guesses?.find((guess: any) => guess.price === value)
                           ) {
-                            return 'Someone already guessed this price'
+                            return 'Someone already guessed this Price Guess!'
                           }
                           return true
                         },
@@ -201,7 +201,7 @@ export default function Enter() {
                     }}
                     render={({ field }) => (
                       <Counter
-                        label="Price Guess (USDT)"
+                        label="Price Guess (USD)"
                         min={MIN_GUESS_PRICE}
                         max={MAX_GUESS_PRICE}
                         step={STEP_GUESS_PRICE}
@@ -243,7 +243,7 @@ export default function Enter() {
                               (guess: any) => guess.nickname === value,
                             )
                           ) {
-                            return 'Nickname already taken for this month'
+                            return 'This nickname is already taken!'
                           }
                           return true
                         },
@@ -268,13 +268,13 @@ export default function Enter() {
                     name="address"
                     control={control}
                     rules={{
-                      required: 'Nano address is required',
+                      required: 'An XNO address is required!',
                       validate: {
                         isNanoAddress: (value) => {
                           if (checkAddress(value)) {
                             return true
                           }
-                          return 'Invalid Nano address'
+                          return 'Invalid XNO address'
                         },
                         isUnique: (value) => {
                           if (!value) {
@@ -285,7 +285,7 @@ export default function Enter() {
                               (guess: any) => guess.address === value,
                             )
                           ) {
-                            return 'Address already exists in this round'
+                            return 'Address already exists in this round!'
                           }
                           return true
                         },
@@ -294,10 +294,10 @@ export default function Enter() {
                     render={({ field }) => (
                       <Input
                         type="text"
-                        label="Nano address"
+                        label="XNO Reward Deposit Address"
                         id="nano-address"
                         autoComplete="off"
-                        placeholder="nano_3tsd1sah..."
+                        placeholder="nano_3tseom3..."
                         className="w-full"
                         disabled={isSuccess || isError || isPosting}
                         {...field}

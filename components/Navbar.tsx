@@ -29,15 +29,17 @@ export default function Navbar({ option }: NavbarProps) {
 
       <div className="w-full max-w-7xl flex justify-between items-center h-20 px-2 py-2 sm:py-0 sm:my-1">
         <div className="flex space-x-2 h-full">
-          <img src="/icons/logo.png" className="logo-img h-full" />
+          <a href="/"><img src="icons/logo.png" className="logo-img h-full" /></a>
           <div className='flex flex-col justify-center'>
             <div>
-              <span className='text-base'>NANOCAFE</span>
+              <span className='text-base'><a href="https://nanocafe.cc">NANOCAFE</a></span>
             </div>
             <div className='flex space-x-2 justify-between text-3xl font-bold -mt-1 text-gold'>
+              <a href="/">
               <span>E</span>
               <span>O</span>
               <span>M</span>
+              </a>
             </div>
           </div>
         </div>
@@ -72,7 +74,7 @@ export default function Navbar({ option }: NavbarProps) {
                 </div>
               ) : (
                 <div className='text-xs sm:text-sm flex flex-col sm:flex-row space-x-2 sm:items-center'>
-                  <div>Nano Price:</div>
+                  <div>XNO Price:</div>
                   <div className={classNames(
                     "text-base font-bold text-green-400",
                     price.usd_24h_change > 0 ? 'text-green-400' : 'text-red-400'

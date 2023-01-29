@@ -39,7 +39,7 @@ export default function Home() {
                 textShadow: '0 0 5px #e2b731',
               }}
             >
-              100 NANO
+              100 XNO
             </h3>
             <div className="text-gray-300 mt-1 flex space-x-4">
               <span>________</span>{' '}
