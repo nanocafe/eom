@@ -57,7 +57,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         const startDate = new Date(new Date().setUTCFullYear(year, month -1, 1)).setUTCHours(0, 0, 0, 0);
-        const endofMonth = new Date(new Date().setUTCFullYear(year, month, 0)).setUTCHours(23, 59, 59, 999);
+
+        // Todo: remove this line and uncomment the next one
+        const endofMonth = new Date(new Date().setUTCFullYear(year, month -1, 28)).setUTCHours(23, 59, 59, 999);
+        // const endofMonth = new Date(new Date().setUTCFullYear(year, month, 0)).setUTCHours(23, 59, 59, 999);
 
         if (Date.now() < startDate) {
             return res.status(400).json({
