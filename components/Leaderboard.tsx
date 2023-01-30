@@ -76,7 +76,7 @@ export default function LeaderBoard({ total, guesses, isLoading, limit, currentP
                   scope="col"
                   className="flex-1 flex items-center justify-center py-3.5 px-2 sm:px-4 pr-3 text-sm font-semibold text-gray-200"
                 >
-                  $ Price Guess
+                  $ Price Guessed
                 </th>
               </tr>
             </thead>
