@@ -9,7 +9,11 @@ import ErrorAlert from 'components/Alert'
 import { Controller, useForm } from 'react-hook-form'
 import Input from 'components/Input'
 import Button from 'components/Button'
-import { ArrowLeftCircleIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
+import {
+  ArrowLeftCircleIcon,
+  CheckCircleIcon,
+  HomeIcon,
+} from '@heroicons/react/20/solid'
 import {
   DEFAULT_PRICE_GUESS_NANO,
   MAX_GUESS_PRICE,
@@ -44,10 +48,9 @@ export default function Enter() {
       refetchInterval: 5000,
     },
   )
-  const {
-    data: price,
-    isLoading: isPriceLoading,
-  } = useQuery(['price'], () => api.get('/price'))
+  const { data: price, isLoading: isPriceLoading } = useQuery(['price'], () =>
+    api.get('/price'),
+  )
 
   const {
     mutate: postGuess,
@@ -144,10 +147,20 @@ export default function Enter() {
 
   return (
     <Layout
-      navbarOption={{
-        name: 'Home',
-        href: '/',
-      }}
+      navbarOption={
+        <Link href="/">
+          <a>
+            <Button
+              style={{
+                width: '100px',
+              }}
+            >
+              <HomeIcon className="w-5 h-5 mr-2" />
+              Home
+            </Button>
+          </a>
+        </Link>
+      }
     >
       <main className="w-full mt-2 px-2">
         <div className="pb-4">
@@ -384,10 +397,20 @@ export default function Enter() {
 const Skeleton = () => {
   return (
     <Layout
-      navbarOption={{
-        name: 'Home',
-        href: '/',
-      }}
+      navbarOption={
+        <Link href="/">
+          <a>
+            <Button
+              style={{
+                width: '100px',
+              }}
+            >
+              <HomeIcon className="w-5 h-5 mr-2" />
+              Home
+            </Button>
+          </a>
+        </Link>
+      }
     >
       <main className="w-full mt-2 px-2">
         <div className="pb-4">

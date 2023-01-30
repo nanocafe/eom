@@ -1,10 +1,11 @@
 import Head from 'next/head'
-import Navbar, { NavbarOption } from './Navbar'
+import { ReactNode } from 'react';
+import Navbar from './Navbar'
 
 export interface LayoutProps {
   children: React.ReactNode;
   showNavbar?: boolean;
-  navbarOption?: NavbarOption;
+  navbarOption?: ReactNode | string;
 }
 
 export default function Layout({ children, showNavbar = true, navbarOption }: LayoutProps) {

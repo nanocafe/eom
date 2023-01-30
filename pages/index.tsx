@@ -4,8 +4,17 @@ import Layout from 'components/Layout'
 import api from 'services/api'
 import { useEffect, useState } from 'react'
 import LeaderBoard from 'components/Leaderboard'
+import { CLOSE_DAY } from 'config/config'
+import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/20/solid'
+import Button from 'components/Button'
 
 const DEFAULT_PAGINATION_LIMIT = 10
+const DEADLINE = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(
+  23,
+  59,
+  59,
+  999,
+)
 
 export default function Home() {
   const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT)
@@ -21,10 +30,32 @@ export default function Home() {
 
   return (
     <Layout
-      navbarOption={{
-        name: 'Enter Now',
-        href: '/enter',
-      }}
+      navbarOption={
+        Date.now() > DEADLINE ? (
+          <Button
+            style={{
+              width: '130px',
+            }}
+            disabled
+          >
+            <LockClosedIcon className="w-5 h-5 mr-2" />
+            LOCKED
+          </Button>
+        ) : (
+          <Link href="/enter">
+            <a>
+              <Button
+                style={{
+                  width: '150px',
+                }}
+              >
+                <LockOpenIcon className="w-5 h-5 mr-2" />
+                Enter Now
+              </Button>
+            </a>
+          </Link>
+        )
+      }
     >
       <main className="p-2">
         <div
