@@ -39,6 +39,8 @@ export default function SnapshotsPage() {
     return <div>We got an error. Check console!</div>
   }
 
+  const winner = snapshot?.winner
+
   return (
     <div className="w-full flex flex-col items-center">
       <div className="w-full max-w-7xl p-2">
@@ -65,6 +67,7 @@ export default function SnapshotsPage() {
           currentPage={currentPage}
           onLimitChange={setLimit}
           onPageChange={setCurrentPage}
+          winner={winner}
         />
       </div>
     </div>

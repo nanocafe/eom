@@ -1,18 +1,32 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { GuessComplete } from 'types/guess';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  TrophyIcon,
+} from '@heroicons/react/20/solid'
+import { GuessComplete } from 'types/guess'
 import { classNames } from 'utils'
 
 interface LeaderBoardProps {
-    total: number;
-    guesses: GuessComplete[];
-    isLoading: boolean;
-    limit: number;
-    currentPage: number;
-    onLimitChange: (limit: number) => void;
-    onPageChange: (page: number) => void;
+  total: number
+  guesses: GuessComplete[]
+  isLoading: boolean
+  limit: number
+  currentPage: number
+  onLimitChange: (limit: number) => void
+  onPageChange: (page: number) => void
+  winner?: number
 }
 
-export default function LeaderBoard({ total, guesses, isLoading, limit, currentPage, onLimitChange, onPageChange }: LeaderBoardProps) {
+export default function LeaderBoard({
+  total,
+  guesses,
+  isLoading,
+  limit,
+  currentPage,
+  onLimitChange,
+  onPageChange,
+  winner,
+}: LeaderBoardProps) {
   const showingFrom = (currentPage - 1) * limit + 1
   const showingTo = (currentPage - 1) * limit + guesses?.values?.length
 
@@ -84,15 +98,26 @@ export default function LeaderBoard({ total, guesses, isLoading, limit, currentP
               {guesses.map((guess: any) => (
                 <tr
                   key={guess.id}
-                  className="bg-alt-gray flex justify-between w-full divide-x divide-dim-gray"
+                  className={classNames(
+                    'flex justify-between w-full divide-x',
+                    guess.id === winner
+                      ? 'bg-gold/10 divide-gold/40 border border-gold/40 text-gray-200'
+                      : 'bg-alt-gray divide-dim-gray text-gray-200',
+                  )}
+                  // style={{ 'textShadow': guess.id === winner ? 'rgb(226, 183, 49) 0px 0px 5px' : undefined }}
                 >
-                  <td className="whitespace-nowrap py-4 px-4 pr-3 text-center text-sm font-medium text-gray-200 sm:pl-6 flex-1">
-                    {guess.position}⁰
+                  <td className="whitespace-nowrap py-4 px-4 pr-3 text-center text-sm font-medium sm:pl-6 flex-1">
+                    <span className="flex items-center justify-center">
+                      {guess.id === winner && (
+                        <TrophyIcon className="w-5 h-5 text-gold mr-2" />
+                      )}
+                      {guess.position}⁰
+                    </span>
                   </td>
-                  <td className="whitespace-nowrap py-4 px-4 pr-3 text-center text-sm font-medium text-gray-200 sm:pl-6 flex-1">
+                  <td className="whitespace-nowrap py-4 px-4 pr-3 text-center text-sm font-medium sm:pl-6 flex-1">
                     {guess.nickname}
                   </td>
-                  <td className="whitespace-nowrap py-4 px-4 pr-3 text-center text-sm font-medium text-gray-200 sm:pl-6 flex-1">
+                  <td className="whitespace-nowrap py-4 px-4 pr-3 text-center text-sm font-medium sm:pl-6 flex-1">
                     {guess.price}
                   </td>
                 </tr>
@@ -167,9 +192,7 @@ export default function LeaderBoard({ total, guesses, isLoading, limit, currentP
                 <button
                   className="relative inline-flex items-center rounded-r-md border border-dim-gray bg-alt-gray px-2 py-2 text-sm font-medium text-gray-200 hover:bg-gold/80 hover:border-gold focus:z-20"
                   onClick={() => onPageChange(currentPage + 1)}
-                  disabled={
-                    currentPage === Math.ceil((total || 10) / limit)
-                  }
+                  disabled={currentPage === Math.ceil((total || 10) / limit)}
                 >
                   <span className="sr-only">Next</span>
                   <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />

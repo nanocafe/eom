@@ -97,7 +97,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
         const response = {
             total: allGuesses.length,
-            values: [] as GuessComplete[]
+            values: [] as GuessComplete[],
         }
 
         //  Add position to each guess and sort by position
@@ -116,6 +116,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                     position: index + 1
                 }
             });
+
+        const winner = response.values[0].id;
 
         /* Since we need sort to add position, we should sort by the other fields manually */
 
@@ -157,7 +159,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
         return res.status(200).json({
             total: response.values.length,
-            values: response.values.slice((page - 1) * limit, page * limit)
+            values: response.values.slice((page - 1) * limit, page * limit),
+            winner
         });
 
     } catch (error) {
