@@ -12,6 +12,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     try {
 
+        if (req.method !== 'GET') {
+            return res.status(405).json({
+                message: 'Method not allowed'
+            });
+        }
+
         const year = Number(req.query.year);
         const month = Number(req.query.month);
 

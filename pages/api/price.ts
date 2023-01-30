@@ -4,6 +4,13 @@ import { getLatestPrice } from "services/coingecko";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     try {
+
+        if (req.method !== "GET") {
+            return res.status(405).json({
+                message: "Method not allowed",
+            });
+        }
+
         const data = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
         res.status(200).json(data);
     } catch (e) {
