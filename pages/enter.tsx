@@ -23,6 +23,7 @@ import {
   STEP_GUESS_PRICE,
 } from 'core/constants'
 import { convert, Unit, checkAddress } from 'nanocurrency'
+import { isLocked } from 'config/config'
 
 interface IFormData {
   nickname: string
@@ -173,223 +174,229 @@ export default function Enter() {
           </Link>
         </div>
 
-        <div className="w-full flex justify-center">
-          <div
-            className="w-full max-w-2xl shadow overflow-hidden rounded-md p-4"
-            style={{
-              backgroundColor: '#3e3e3e',
-            }}
-          >
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="grid grid-cols-3 gap-3 py-2 mb-4">
-                <div className="col-span-3 sm:col-span-1">
-                  <Controller
-                    name="price"
-                    control={control}
-                    rules={{
-                      required: 'A Price Guess is required!',
-                      min: {
-                        value: MIN_GUESS_PRICE,
-                        message: `Price Guess must be at least ${MIN_GUESS_PRICE}`,
-                      },
-                      max: {
-                        value: MAX_GUESS_PRICE,
-                        message: `Price Guess must be at most ${MAX_GUESS_PRICE}`,
-                      },
-                      validate: {
-                        isNumber: (value) => {
-                          if (isNaN(value)) {
-                            return 'Price Guess must be a number!'
-                          }
-                          return true
+        {isLocked() ? (
+          <ErrorAlert title="Competiton is Currently Locked" messages={["The game is currently locked.", "Please try again later."]} />
+        ) : (
+          <div className="w-full flex justify-center">
+            <div
+              className="w-full max-w-2xl shadow overflow-hidden rounded-md p-4"
+              style={{
+                backgroundColor: '#3e3e3e',
+              }}
+            >
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="grid grid-cols-3 gap-3 py-2 mb-4">
+                  <div className="col-span-3 sm:col-span-1">
+                    <Controller
+                      name="price"
+                      control={control}
+                      rules={{
+                        required: 'A Price Guess is required!',
+                        min: {
+                          value: MIN_GUESS_PRICE,
+                          message: `Price Guess must be at least ${MIN_GUESS_PRICE}`,
                         },
-                        isUnique: (value) => {
-                          if (
-                            guesses?.values?.find((guess: any) => guess.price === value)
-                          ) {
-                            return 'Someone already guessed this Price Guess!'
-                          }
-                          return true
+                        max: {
+                          value: MAX_GUESS_PRICE,
+                          message: `Price Guess must be at most ${MAX_GUESS_PRICE}`,
                         },
-                      },
-                    }}
-                    render={({ field }) => (
-                      <Counter
-                        label="Price Guess (USD)"
-                        min={MIN_GUESS_PRICE}
-                        max={MAX_GUESS_PRICE}
-                        step={STEP_GUESS_PRICE}
-                        defaultValue={price.usd}
-                        disabled={isSuccess || isError || isPosting}
-                        {...field}
-                        errorMessage={errors.price?.message}
-                      />
-                    )}
-                  />
-                </div>
-
-                <div className="col-span-3 sm:col-span-2">
-                  <Controller
-                    name="nickname"
-                    control={control}
-                    rules={{
-                      required: 'Nickname is required',
-                      minLength: {
-                        value: MIN_NICKNAME_LENGTH,
-                        message: `Nickname must be at least ${MIN_NICKNAME_LENGTH} characters`,
-                      },
-                      maxLength: {
-                        value: MAX_NICKNAME_LENGTH,
-                        message: `Nickname must be at most ${MAX_NICKNAME_LENGTH} characters`,
-                      },
-                      pattern: {
-                        value: /^[a-z0-9_]*$/,
-                        message:
-                          'Nickname must be alphanumeric (a-z, 0-9) and lowercase',
-                      },
-                      validate: {
-                        isUnique: (value) => {
-                          if (!value) {
+                        validate: {
+                          isNumber: (value) => {
+                            if (isNaN(value)) {
+                              return 'Price Guess must be a number!'
+                            }
                             return true
-                          }
-                          if (
-                            guesses?.values?.find(
-                              (guess: any) => guess.nickname === value,
-                            )
-                          ) {
-                            return 'This nickname is already taken!'
-                          }
-                          return true
-                        },
-                      },
-                    }}
-                    render={({ field }) => (
-                      <Input
-                        type="text"
-                        label="Nickname"
-                        id="nickname"
-                        className="w-full"
-                        disabled={isSuccess || isError || isPosting}
-                        {...field}
-                        errorMessage={errors.nickname?.message}
-                      />
-                    )}
-                  />
-                </div>
-
-                <div className="col-span-3 mt-4">
-                  <Controller
-                    name="address"
-                    control={control}
-                    rules={{
-                      required: 'An XNO address is required!',
-                      validate: {
-                        isNanoAddress: (value) => {
-                          if (checkAddress(value)) {
+                          },
+                          isUnique: (value) => {
+                            if (
+                              guesses?.values?.find(
+                                (guess: any) => guess.price === value,
+                              )
+                            ) {
+                              return 'Someone already guessed this Price Guess!'
+                            }
                             return true
-                          }
-                          return 'Invalid XNO address'
+                          },
                         },
-                        isUnique: (value) => {
-                          if (!value) {
-                            return true
-                          }
-                          if (
-                            guesses?.values?.find(
-                              (guess: any) => guess.address === value,
-                            )
-                          ) {
-                            return 'Address already exists in this round!'
-                          }
-                          return true
-                        },
-                      },
-                    }}
-                    render={({ field }) => (
-                      <Input
-                        type="text"
-                        label="XNO Reward Deposit Address"
-                        id="nano-address"
-                        autoComplete="off"
-                        placeholder="nano_3tseom3..."
-                        className="w-full"
-                        disabled={isSuccess || isError || isPosting}
-                        {...field}
-                        errorMessage={errors.address?.message}
-                      />
-                    )}
-                  />
-                </div>
-              </div>
-
-              <button
-                id="nanobytepay"
-                ref={paymentButtonRef}
-                className="sr-only"
-              />
-
-              <div className="w-full flex flex-col justify-center pb-2 space-y-4">
-                {isSuccess ? (
-                  <div className="flex flex-col items-center space-y-2">
-                    <CheckCircleIcon className="h-10 w-10 text-green-500" />
-                    <h2 className="text-lg text-center">
-                      Thank you for your guess!
-                    </h2>
-                    <p className="text-center text-sm">
-                      Your PaymentId: {paymentId}
-                    </p>
-                  </div>
-                ) : error ? (
-                  <>
-                    <ErrorAlert
-                      title={`Payment Error: ${error}`}
-                      messages={[
-                        'Save your payment id and contact support if you think this is a mistake',
-                      ]}
+                      }}
+                      render={({ field }) => (
+                        <Counter
+                          label="Price Guess (USD)"
+                          min={MIN_GUESS_PRICE}
+                          max={MAX_GUESS_PRICE}
+                          step={STEP_GUESS_PRICE}
+                          defaultValue={price.usd}
+                          disabled={isSuccess || isError || isPosting}
+                          {...field}
+                          errorMessage={errors.price?.message}
+                        />
+                      )}
                     />
-                    {paymentId && (
-                      <Button
-                        type="button"
-                        onClick={() => postGuess(paymentId)}
-                      >
-                        Try Again
-                      </Button>
-                    )}
-                  </>
-                ) : preCheckoutError ? (
-                  <ErrorAlert title={`Checkout Error: ${preCheckoutError}`} />
-                ) : (
-                  <Button
-                    type="submit"
-                    loading={
-                      isSubmitting ||
-                      isPosting ||
-                      isPreCheckoutLoading ||
-                      paymentPending
-                    }
-                    disabled={
-                      !isValid ||
-                      isSubmitting ||
-                      isSuccess ||
-                      isError ||
-                      isPreCheckoutLoading ||
-                      isPosting ||
-                      paymentPending
-                    }
-                  >
-                    {paymentPending
-                      ? 'Waiting for payment...'
-                      : isPosting
-                      ? 'Submiting...'
-                      : isPreCheckoutLoading
-                      ? 'Processing...'
-                      : 'Submit'}
-                  </Button>
-                )}
-              </div>
-            </form>
+                  </div>
+
+                  <div className="col-span-3 sm:col-span-2">
+                    <Controller
+                      name="nickname"
+                      control={control}
+                      rules={{
+                        required: 'Nickname is required',
+                        minLength: {
+                          value: MIN_NICKNAME_LENGTH,
+                          message: `Nickname must be at least ${MIN_NICKNAME_LENGTH} characters`,
+                        },
+                        maxLength: {
+                          value: MAX_NICKNAME_LENGTH,
+                          message: `Nickname must be at most ${MAX_NICKNAME_LENGTH} characters`,
+                        },
+                        pattern: {
+                          value: /^[a-z0-9_]*$/,
+                          message:
+                            'Nickname must be alphanumeric (a-z, 0-9) and lowercase',
+                        },
+                        validate: {
+                          isUnique: (value) => {
+                            if (!value) {
+                              return true
+                            }
+                            if (
+                              guesses?.values?.find(
+                                (guess: any) => guess.nickname === value,
+                              )
+                            ) {
+                              return 'This nickname is already taken!'
+                            }
+                            return true
+                          },
+                        },
+                      }}
+                      render={({ field }) => (
+                        <Input
+                          type="text"
+                          label="Nickname"
+                          id="nickname"
+                          className="w-full"
+                          disabled={isSuccess || isError || isPosting}
+                          {...field}
+                          errorMessage={errors.nickname?.message}
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="col-span-3 mt-4">
+                    <Controller
+                      name="address"
+                      control={control}
+                      rules={{
+                        required: 'An XNO address is required!',
+                        validate: {
+                          isNanoAddress: (value) => {
+                            if (checkAddress(value)) {
+                              return true
+                            }
+                            return 'Invalid XNO address'
+                          },
+                          isUnique: (value) => {
+                            if (!value) {
+                              return true
+                            }
+                            if (
+                              guesses?.values?.find(
+                                (guess: any) => guess.address === value,
+                              )
+                            ) {
+                              return 'Address already exists in this round!'
+                            }
+                            return true
+                          },
+                        },
+                      }}
+                      render={({ field }) => (
+                        <Input
+                          type="text"
+                          label="XNO Reward Deposit Address"
+                          id="nano-address"
+                          autoComplete="off"
+                          placeholder="nano_3tseom3..."
+                          className="w-full"
+                          disabled={isSuccess || isError || isPosting}
+                          {...field}
+                          errorMessage={errors.address?.message}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <button
+                  id="nanobytepay"
+                  ref={paymentButtonRef}
+                  className="sr-only"
+                />
+
+                <div className="w-full flex flex-col justify-center pb-2 space-y-4">
+                  {isSuccess ? (
+                    <div className="flex flex-col items-center space-y-2">
+                      <CheckCircleIcon className="h-10 w-10 text-green-500" />
+                      <h2 className="text-lg text-center">
+                        Thank you for your guess!
+                      </h2>
+                      <p className="text-center text-sm">
+                        Your PaymentId: {paymentId}
+                      </p>
+                    </div>
+                  ) : error ? (
+                    <>
+                      <ErrorAlert
+                        title={`Payment Error: ${error}`}
+                        messages={[
+                          'Save your payment id and contact support if you think this is a mistake',
+                        ]}
+                      />
+                      {paymentId && (
+                        <Button
+                          type="button"
+                          onClick={() => postGuess(paymentId)}
+                        >
+                          Try Again
+                        </Button>
+                      )}
+                    </>
+                  ) : preCheckoutError ? (
+                    <ErrorAlert title={`Checkout Error: ${preCheckoutError}`} />
+                  ) : (
+                    <Button
+                      type="submit"
+                      loading={
+                        isSubmitting ||
+                        isPosting ||
+                        isPreCheckoutLoading ||
+                        paymentPending
+                      }
+                      disabled={
+                        !isValid ||
+                        isSubmitting ||
+                        isSuccess ||
+                        isError ||
+                        isPreCheckoutLoading ||
+                        isPosting ||
+                        paymentPending
+                      }
+                    >
+                      {paymentPending
+                        ? 'Waiting for payment...'
+                        : isPosting
+                        ? 'Submiting...'
+                        : isPreCheckoutLoading
+                        ? 'Processing...'
+                        : 'Submit'}
+                    </Button>
+                  )}
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </Layout>
   )
