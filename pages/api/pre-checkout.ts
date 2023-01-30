@@ -16,6 +16,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     try {
 
+        if (req.method !== 'POST') {
+            return res.status(400).json({
+                success: false,
+                message: 'invalid method'
+            });
+        }
+
         if (isLocked()) {
             return res.status(400).json({
                 success: false,

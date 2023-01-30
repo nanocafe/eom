@@ -84,7 +84,7 @@ export default function Enter() {
     isRefetching: preCheckoutRefetching,
     error: preCheckoutError,
     refetch: makePreCheckout,
-  } = useQuery(['pre-checkout'], () => api.get('/pre-checkout'), {
+  } = useQuery(['pre-checkout'], () => api.post('/pre-checkout'), {
     cacheTime: 0,
     enabled: false,
     refetchOnWindowFocus: false,
