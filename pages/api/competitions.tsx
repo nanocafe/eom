@@ -21,7 +21,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         },
     })
 
-    const numberOfGuessesByYearAndMonth = guesses.reduce((acc, guess) => {
+    const numberOfGuessesByYearAndMonth = guesses.reduce((acc: Record<string, Record<string, number>>, guess: { createdAt: Date }) => {
         const year = guess.createdAt.getFullYear()
         const month = guess.createdAt.getMonth() + 1
 
