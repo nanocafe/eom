@@ -1,4 +1,5 @@
 import axios from "axios";
+import { isLocked } from "config/config";
 import { DEFAULT_OPEN_DAY } from "core/constants";
 import prisma from "lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -14,6 +15,13 @@ const startDate = new Date(new Date().setUTCDate(DEFAULT_OPEN_DAY)).setUTCHours(
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     try {
+
+        if (isLocked()) {
+            return res.status(400).json({
+                success: false,
+                message: 'the competition is locked'
+            });
+        }
 
         // If running locally, skip the ip validation
         if (process.env.NODE_ENV === 'development') {

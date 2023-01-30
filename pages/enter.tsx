@@ -87,6 +87,7 @@ export default function Enter() {
     cacheTime: 0,
     enabled: false,
     refetchOnWindowFocus: false,
+    retry: false,
     onSuccess: () => {
       if (paymentButtonRef.current) {
         setPaymentPending(true)

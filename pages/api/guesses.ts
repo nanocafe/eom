@@ -5,7 +5,7 @@ import { TunedBigNumber } from "utils/nano";
 import { IPaymentResponse } from "types/checkout";
 import { GuessComplete, GuessData } from "types/guess";
 import prisma from "lib/prisma";
-import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, PRICE_GUESS_NANO, COIN_ID } from "config/config";
+import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, PRICE_GUESS_NANO, COIN_ID, isLocked } from "config/config";
 import { getLatestPrice } from "services/coingecko";
 
 const allowedSortBy = ['position', 'createdAt', 'price', 'nickname'];
@@ -136,8 +136,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             if (today() < OPEN_DAY) return res.status(400).json({ message: "not started yet" })
 
             // Competition of the month finished
-            if (today() >= CLOSE_DAY + 1) {
-                return res.status(400).json({ message: "finished" })
+            if (isLocked()) {
+                return res.status(400).json({ message: "competiton is finished" })
             }
 
             // Parse user json request 
