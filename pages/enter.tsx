@@ -204,7 +204,7 @@ export default function Enter() {
                         },
                         isUnique: (value) => {
                           if (
-                            guesses?.find((guess: any) => guess.price === value)
+                            guesses?.values?.find((guess: any) => guess.price === value)
                           ) {
                             return 'Someone already guessed this Price Guess!'
                           }
@@ -218,7 +218,7 @@ export default function Enter() {
                         min={MIN_GUESS_PRICE}
                         max={MAX_GUESS_PRICE}
                         step={STEP_GUESS_PRICE}
-                        defaultValue={price.price}
+                        defaultValue={price.usd}
                         disabled={isSuccess || isError || isPosting}
                         {...field}
                         errorMessage={errors.price?.message}
@@ -252,7 +252,7 @@ export default function Enter() {
                             return true
                           }
                           if (
-                            guesses.find(
+                            guesses?.values?.find(
                               (guess: any) => guess.nickname === value,
                             )
                           ) {
@@ -294,7 +294,7 @@ export default function Enter() {
                             return true
                           }
                           if (
-                            guesses.find(
+                            guesses?.values?.find(
                               (guess: any) => guess.address === value,
                             )
                           ) {
