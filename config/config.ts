@@ -18,3 +18,12 @@ export const LATEST_PRICE_CACHE_TIME = 60 * 1000; // 1 minute in milliseconds
 export const COIN_ID = 'nano';
 
 export const CONVERT_SYMBOL = "usd";
+
+export const DEADLINE = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(
+    23,
+    59,
+    59,
+    999,
+);
+
+export const isLocked = () => Date.now() > DEADLINE;

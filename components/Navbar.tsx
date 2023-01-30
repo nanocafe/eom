@@ -1,24 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
-import { CONVERT_SYMBOL } from 'config/config'
+import { CONVERT_SYMBOL, DEADLINE } from 'config/config'
 import { DEFAULT_CLOSE_DAY } from 'core/constants'
 import { ReactNode } from 'react'
 import API from 'services/api'
 import { classNames } from 'utils'
 import CountdownViewer from './CountdownViewer'
 
-const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY)
-
 export interface NavbarProps {
   option?: ReactNode | string;
 }
 
 export default function Navbar({ option }: NavbarProps) {
-  const deadline = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(
-    23,
-    59,
-    59,
-    999,
-  )
 
   const { data: price, error: priceError, isLoading } = useQuery(
     ['price'],
@@ -84,7 +76,7 @@ export default function Navbar({ option }: NavbarProps) {
               </div>
             )}
           </div>
-          <CountdownViewer date={deadline} />
+          <CountdownViewer date={DEADLINE} />
         </div>
       </div>
     </nav>
