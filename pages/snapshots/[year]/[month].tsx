@@ -18,15 +18,16 @@ export default function SnapshotsPage() {
 
   const { data: snapshot, isError, error, isLoading, refetch } = useQuery(
     ['guesses', year, month],
-    () => api.get(`snapshots/${year}/${month}?page=${currentPage}&limit=${limit}`),
+    () =>
+      api.get(`snapshots/${year}/${month}?page=${currentPage}&limit=${limit}`),
     {
       enabled: !isNaN(year) && !isNaN(month),
-    }
+    },
   )
 
   useEffect(() => {
     if (snapshot) {
-      refetch();
+      refetch()
     }
   }, [currentPage, limit])
 
@@ -41,6 +42,10 @@ export default function SnapshotsPage() {
 
   const winner = snapshot?.winner
 
+  const monthName = new Date(year, month - 1, 1).toLocaleString('default', {
+    month: 'long',
+  })
+
   return (
     <div className="w-full flex flex-col items-center">
       <div className="w-full max-w-7xl p-2">
@@ -52,10 +57,7 @@ export default function SnapshotsPage() {
         <h1 className="text-xl py-4 border-b mb-4 border-dim-gray">
           Snapshot for{' '}
           <span className="text-gold">
-            {new Date(year, month -1, 1).toLocaleString('default', {
-              month: 'long',
-            })}{' '}
-            {year}
+            {monthName} {year}
           </span>{' '}
           competition
         </h1>
