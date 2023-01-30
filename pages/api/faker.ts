@@ -11,7 +11,7 @@ import { faker } from '@faker-js/faker';
 import prisma from "lib/prisma";
 import { deriveAddress, derivePublicKey, deriveSecretKey, generateSeed } from 'nanocurrency';
 import { CLOSE_DAY, OPEN_DAY } from "config/config";
-import { GuessData } from "types/guess";
+import { GuessComplete, GuessData } from "types/guess";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
@@ -66,7 +66,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
         const newRandomPrice = (): number => {
             const price = Number(faker.finance.amount(minPrice, maxPrice));
-            if (currentGuesses.find(guess => guess.price === price)) {
+            if (currentGuesses.find((guess: GuessComplete) => guess.price === price)) {
                 return newRandomPrice();
             }
             if (newGuesses.find(guess => guess.price === price)) {
@@ -77,7 +77,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
         const newRandomNickname = (): string => {
             const nickname = faker.name.firstName().toLowerCase();
-            if (currentGuesses.find(guess => guess.nickname === nickname)) {
+            if (currentGuesses.find((guess: GuessComplete) => guess.nickname === nickname)) {
                 return newRandomNickname();
             }
             if (newGuesses.find(guess => guess.nickname === nickname)) {

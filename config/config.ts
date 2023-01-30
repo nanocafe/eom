@@ -1,10 +1,6 @@
 import { convert, Unit } from 'nanocurrency';
 import { DEFAULT_CLOSE_DAY, DEFAULT_OPEN_DAY, DEFAULT_PRICE_GUESS_NANO } from "core/constants";
 
-export const OPENING_YEAR = 2023;
-
-export const OPENING_MONTH = 1;
-
 export const OPEN_DAY = Number(process.env.NEXT_PUBLIC_OPEN_DAY || DEFAULT_OPEN_DAY);
 
 export const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY);

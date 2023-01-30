@@ -22,6 +22,7 @@ export default function SnapshotsPage() {
       api.get(`snapshots/${year}/${month}?page=${currentPage}&limit=${limit}`),
     {
       enabled: !isNaN(year) && !isNaN(month),
+      retry: false
     },
   )
 
@@ -36,8 +37,7 @@ export default function SnapshotsPage() {
   }
 
   if (isError) {
-    console.error('Error:', error)
-    return <div>We got an error. Check console!</div>
+    return <div>{error}</div>
   }
 
   const winner = snapshot?.winner

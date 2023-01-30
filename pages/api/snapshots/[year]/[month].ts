@@ -1,4 +1,4 @@
-import { COIN_ID, CONVERT_SYMBOL, OPENING_MONTH, OPENING_YEAR } from "config/config";
+import { COIN_ID, CONVERT_SYMBOL } from "config/config";
 import prisma from "lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getRangePrice } from "services/coingecko";
@@ -56,12 +56,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             });
         }
 
-        if (year < OPENING_YEAR || (year === OPENING_YEAR && month < OPENING_MONTH)) {
-            return res.status(400).json({
-                message: `the competition started in ${OPENING_MONTH}/${OPENING_YEAR}`
-            });
-        }
-
         const startDate = new Date(new Date().setUTCFullYear(year, month -1, 1)).setUTCHours(0, 0, 0, 0);
 
         // Todo: remove this line and uncomment the next one
@@ -99,7 +93,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         // Get all guesses from the snapshot month
         const allGuesses = await prisma.guess.findMany({
             where: dateFilter,
-        });     
+        });
+        
+        if (allGuesses.length === 0) {
+            return res.status(404).json({
+                message: 'no guesses found'
+            });
+        }
 
         const response = {
             total: allGuesses.length,
@@ -107,7 +107,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         //  Add position to each guess and sort by position
-        response.values = allGuesses.map((guess, index) => {
+        response.values = allGuesses.map((guess: GuessComplete, index: number) => {
             const diff = Math.abs(guess.price - lastPrice);
             return {
                 ...guess,
@@ -115,8 +115,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 diff
             }
         })
-            .sort((a, b) => a.diff - b.diff)
-            .map((guess, index) => {
+            .sort((a: any, b: any) => a.diff - b.diff)
+            .map((guess: GuessComplete, index: number) => {
                 return {
                     ...guess,
                     position: index + 1
