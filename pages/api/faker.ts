@@ -76,7 +76,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         const newRandomNickname = (): string => {
-            const nickname = faker.name.firstName();
+            const nickname = faker.name.firstName().toLowerCase();
             if (currentGuesses.find(guess => guess.nickname === nickname)) {
                 return newRandomNickname();
             }

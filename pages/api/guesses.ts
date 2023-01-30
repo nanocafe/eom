@@ -179,7 +179,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             }
 
             // Get guess data from checkout metadata
-            const { userNickname: nickname, userNanoAddress: address, userGuessPrice: price, amount } = payment.metadata;
+            const { userNickname, userNanoAddress: address, userGuessPrice: price, amount } = payment.metadata;
+
+            const nickname = userNickname.toLowerCase();
 
             // Ensure user has paid enough
             if (TunedBigNumber(amount).isLessThan(PRICE_GUESS_NANO)) {
