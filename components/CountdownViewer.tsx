@@ -18,7 +18,7 @@ function CountdownRender({ days, hours, minutes, seconds, completed }: Countdown
     const pad = (n: number) => n.toString().padStart(2, '0');
 
     if (completed) {
-        return <div className='flex items-center text-red-400 font-bold text-lg'>Competition is Currently Locked!</div>
+        return <div className='flex items-center text-red-400 font-bold text-lg'>Currently Locked!</div>
     } else {
         return (
             <div id="countdown" className='flex items-top space-x-1 sm:space-x-2 font-medium sm:font-semibold'>

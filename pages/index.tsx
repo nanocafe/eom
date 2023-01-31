@@ -86,6 +86,11 @@ export default function Home() {
           />
 
           <div className="w-full flex justify-center py-4 mt-8">
+          <Link href="/FAQ">
+              <a className="px-2 py-1 text-gold/80 hover:text-gold border border-gold/70 hover:border-gold hover:shadow rounded">
+                EOM FAQ
+              </a>
+            </Link>
             <Link href="/transparency">
               <a className="px-2 py-1 text-gold/80 hover:text-gold border border-gold/70 hover:border-gold hover:shadow rounded">
                 TRANSPARENCY

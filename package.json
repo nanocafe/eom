@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/styled": "^11.10.5",
     "@heroicons/react": "^2.0.13",
+    "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.10.17",
     "@nanobyte-crypto/checkout": "^0.1.5",
     "@prisma/client": "4.7.1",
