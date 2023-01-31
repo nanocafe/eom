@@ -1,9 +1,10 @@
-import { COIN_ID, CONVERT_SYMBOL } from "config/config";
+import { COIN_ID, CONVERT_SYMBOL, isLocked } from "config/config";
 import prisma from "lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getRangePrice } from "services/coingecko";
 import { GuessComplete } from "types/guess";
-
+import crypto from "crypto";
+import Papa from 'papaparse';
 
 const allowedSortBy = ['position', 'createdAt', 'price', 'nickname'];
 const allowedOrderBy = ['asc', 'desc'];
@@ -56,10 +57,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             });
         }
 
-        const startDate = new Date(new Date().setUTCFullYear(year, month -1, 1)).setUTCHours(0, 0, 0, 0);
+        const startDate = new Date(new Date().setUTCFullYear(year, month - 1, 1)).setUTCHours(0, 0, 0, 0);
 
         // Todo: remove this line and uncomment the next one
-        const endofMonth = new Date(new Date().setUTCFullYear(year, month -1, 28)).setUTCHours(23, 59, 59, 999);
+        const endofMonth = new Date(new Date().setUTCFullYear(year, month - 1, 28)).setUTCHours(23, 59, 59, 999);
         // const endofMonth = new Date(new Date().setUTCFullYear(year, month, 0)).setUTCHours(23, 59, 59, 999);
 
         if (Date.now() < startDate) {
@@ -91,23 +92,38 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         const lastPrice = prices[prices.length - 1];
 
         // Get all guesses from the snapshot month
-        const allGuesses = await prisma.guess.findMany({
+        const guesses = await prisma.guess.findMany({
             where: dateFilter,
+            orderBy: {
+                createdAt: 'asc'
+            },
         });
-        
-        if (allGuesses.length === 0) {
+
+        if (guesses.length === 0) {
             return res.status(404).json({
                 message: 'no guesses found'
             });
         }
 
+        const csv = Papa.unparse(guesses);
+
         const response = {
-            total: allGuesses.length,
+            total: guesses.length,
             values: [] as GuessComplete[],
+            winner: null as number | null,
+            checksum: {
+                csv: {
+                    sha256: crypto.createHash('sha256').update(csv).digest('hex'),
+                    md5: crypto.createHash('md5').update(csv).digest('hex')
+                }
+            },
+            download: {
+                csv: `/api/snapshots/${year}/${month}/download/csv`,
+            }
         }
 
         //  Add position to each guess and sort by position
-        response.values = allGuesses.map((guess: GuessComplete, index: number) => {
+        response.values = guesses.map((guess: any, index: number) => {
             const diff = Math.abs(guess.price - lastPrice);
             return {
                 ...guess,
@@ -123,7 +139,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 }
             });
 
-        const winner = response.values[0].id;
+        // Add winner only if the competition is locked
+        if (isLocked()) {
+            response.winner = response.values[0].id;
+        }
 
         /* Since we need sort to add position, we should sort by the other fields manually */
 
@@ -164,9 +183,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         return res.status(200).json({
-            total: response.values.length,
+            ...response,
             values: response.values.slice((page - 1) * limit, page * limit),
-            winner
         });
 
     } catch (error) {
