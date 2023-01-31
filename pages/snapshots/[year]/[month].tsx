@@ -4,7 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import api from 'services/api'
-
+import Button from 'components/Button'
+import { ArrowDownTrayIcon } from '@heroicons/react/20/solid'
+import {
+  DocumentMagnifyingGlassIcon,
+  InformationCircleIcon,
+} from '@heroicons/react/24/outline'
 const DEFAULT_PAGINATION_LIMIT = 10
 
 export default function SnapshotsPage() {
@@ -22,7 +27,7 @@ export default function SnapshotsPage() {
       api.get(`snapshots/${year}/${month}?page=${currentPage}&limit=${limit}`),
     {
       enabled: !isNaN(year) && !isNaN(month),
-      retry: false
+      retry: false,
     },
   )
 
@@ -71,6 +76,56 @@ export default function SnapshotsPage() {
           onPageChange={setCurrentPage}
           winner={winner}
         />
+        <section className="w-full py-4 my-4 border-t border-dim-gray">
+          <h2 className="text-xl mb-2">Export Snapshot</h2>
+          <div className="flex flex-wrap justify-between">
+            <div className="max-w-full break-all mt-2 text-sm text-white">
+              <p>
+                <span className="text-gold">MD5:</span> {snapshot?.checksum.csv.md5}
+              </p>
+              <p className="mt-1">
+                <span className="text-gold">SHA-256:</span>{' '}
+                {snapshot?.checksum.csv.sha256}
+              </p>
+            </div>
+            <div className="flex pt-4 items-end justify-center md:justify-end flex-1">
+              <Link href={snapshot?.download?.csv || ''}>
+                <Button
+                  startIcon={
+                    <ArrowDownTrayIcon className="w-5 h-5 text-white" />
+                  }
+                >
+                  Download CSV
+                </Button>
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4 mt-4 text-sm text-gray-300 p-2 bg-dim-gray/80 rounded">
+            <InformationCircleIcon className="w-10 h-10" />
+            <div>
+              <p className="flex items-start ">
+                <span>
+                  By downloading the snapshot and saving the hash for later
+                  comparison you have <b>the proof</b> that no data has changed.
+                </span>
+              </p>
+              <p className="flex items-start mt-1">
+                <span>
+                  You can open the CSV file in any spreadsheet software, like
+                  Microsoft Excel, LibreOffice Calc or{' '}
+                  <a
+                    href="https://csv-viewer-online.github.io/"
+                    target="_blank"
+                    className="text-gold hover:underline"
+                  >
+                    Online Tools
+                  </a>
+                  .
+                </span>
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   )
