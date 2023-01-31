@@ -42,7 +42,7 @@ export default function SnapshotsPage() {
   }
 
   if (isError) {
-    return <div>{error}</div>
+    return <div>{error as any}</div>
   }
 
   const winner = snapshot?.winner
