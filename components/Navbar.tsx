@@ -56,7 +56,7 @@ export default function Navbar({ option }: NavbarProps) {
               </div>
             ) : (
               <div className="text-xs sm:text-sm flex flex-col sm:flex-row space-x-2 sm:items-center">
-                <div>XNO Price:</div>
+                <div>XNO/USD:</div>
                 <div
                   className={classNames(
                     'text-base font-bold text-green-400',
