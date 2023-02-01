@@ -15,7 +15,7 @@ import {
   HomeIcon,
 } from '@heroicons/react/20/solid'
 import {
-  DEFAULT_PRICE_GUESS_NANO,
+  DEFAULT_NEXT_PUBLIC_ENTRY_FEE,
   MAX_GUESS_PRICE,
   MAX_NICKNAME_LENGTH,
   MIN_GUESS_PRICE,
@@ -31,8 +31,8 @@ interface IFormData {
   price: number
 }
 
-const PRICE_GUESS_NANO = convert(
-  process.env.NEXT_PUBLIC_PRICE_GUESS_NANO || DEFAULT_PRICE_GUESS_NANO,
+const NEXT_PUBLIC_ENTRY_FEE = convert(
+  process.env.NEXT_PUBLIC_NEXT_PUBLIC_ENTRY_FEE || DEFAULT_NEXT_PUBLIC_ENTRY_FEE,
   { from: Unit.NANO, to: Unit.raw },
 )
 
@@ -133,7 +133,7 @@ export default function Enter() {
 
     await checkout.setInterceptClick(async () => {
       return {
-        amount: PRICE_GUESS_NANO,
+        amount: NEXT_PUBLIC_ENTRY_FEE,
         label: 'End Of Month Guess',
         message: 'Thank you!',
         userNickname: data.nickname,
