@@ -36,8 +36,8 @@ const faqs = [
         <br></br>
         <br></br>
         EOM is locked from the 7th day till the final day of the corresponding
-        month, more info on the exact time is available on the PDF of rules &
-        Guidelines.
+        month, more info on the exact time is available in the rules &
+        guidelines.
       </p>
     ),
   },
@@ -78,20 +78,19 @@ const faqs = [
     summary: <h2>What is the entry fee for EOM?</h2>,
     details: (
       <p>
-        The current entry fee for February 2023 EOM competition is 0.07XNO,
-        which is currently $
+        The current entry fee for February 2023 EOM competition is 0.01XNO.
       </p>
     ),
   },
   {
     summary: (
-      <h2>Can I see the full rules and guidelines for this competition?</h2>
+      <h2>Can I see the full rules and guidelines for EOM?</h2>
     ),
     details: (
       <p>
-        You can view the full rules and guidelines on{' '}
-        <Link href="/transparency">
-          <a className="text-gold hover:underline">Transparency Page</a>
+        You can download and view the full rules and guidelines {' '}
+        <Link href="https://drive.proton.me/urls/V9EBR4FCK4#8hRMWMA2P9Vm">
+          <a className="text-gold hover:underline">here</a>
         </Link>
         .
       </p>
