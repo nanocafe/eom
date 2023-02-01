@@ -5,7 +5,9 @@ export const OPEN_DAY = Number(process.env.NEXT_PUBLIC_OPEN_DAY || DEFAULT_OPEN_
 
 export const CLOSE_DAY = Number(process.env.NEXT_PUBLIC_CLOSE_DAY || DEFAULT_CLOSE_DAY);
 
-export const NEXT_PUBLIC_ENTRY_FEE = convert(process.env.NEXT_PUBLIC_NEXT_PUBLIC_ENTRY_FEE || DEFAULT_NEXT_PUBLIC_ENTRY_FEE, { from: Unit.NANO, to: Unit.raw });
+export const ENTRY_FEE = process.env.NEXT_PUBLIC_ENTRY_FEE || DEFAULT_NEXT_PUBLIC_ENTRY_FEE;
+
+export const ENTRY_FEE_RAWS = convert(ENTRY_FEE, { from: Unit.NANO, to: Unit.raw });
 
 export const CHECKOUT_API_KEY = process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '';
 

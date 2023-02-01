@@ -5,7 +5,7 @@ import { TunedBigNumber } from "utils/nano";
 import { IPaymentResponse } from "types/checkout";
 import { GuessComplete, GuessData } from "types/guess";
 import prisma from "lib/prisma";
-import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, NEXT_PUBLIC_ENTRY_FEE, COIN_ID, isLocked } from "config/config";
+import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, COIN_ID, isLocked, ENTRY_FEE, ENTRY_FEE_RAWS } from "config/config";
 import { getLatestPrice } from "services/coingecko";
 
 const allowedSortBy = ['position', 'createdAt', 'price', 'nickname'];
@@ -184,7 +184,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             const nickname = userNickname.toLowerCase();
 
             // Ensure user has paid enough
-            if (TunedBigNumber(amount).isLessThan(NEXT_PUBLIC_ENTRY_FEE)) {
+            if (TunedBigNumber(amount).isLessThan(ENTRY_FEE_RAWS)) {
                 return res.status(402).json({ message: 'insufficient amount' });
             }
 

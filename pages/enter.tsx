@@ -15,7 +15,6 @@ import {
   HomeIcon,
 } from '@heroicons/react/20/solid'
 import {
-  DEFAULT_NEXT_PUBLIC_ENTRY_FEE,
   MAX_GUESS_PRICE,
   MAX_NICKNAME_LENGTH,
   MIN_GUESS_PRICE,
@@ -23,18 +22,13 @@ import {
   STEP_GUESS_PRICE,
 } from 'core/constants'
 import { convert, Unit, checkAddress } from 'nanocurrency'
-import { isLocked } from 'config/config'
+import { ENTRY_FEE_RAWS, isLocked } from 'config/config'
 
 interface IFormData {
   nickname: string
   address: string
   price: number
 }
-
-const NEXT_PUBLIC_ENTRY_FEE = convert(
-  process.env.NEXT_PUBLIC_NEXT_PUBLIC_ENTRY_FEE || DEFAULT_NEXT_PUBLIC_ENTRY_FEE,
-  { from: Unit.NANO, to: Unit.raw },
-)
 
 export default function Enter() {
   const [paymentId, setPaymentId] = useState<string>('')
@@ -133,7 +127,7 @@ export default function Enter() {
 
     await checkout.setInterceptClick(async () => {
       return {
-        amount: NEXT_PUBLIC_ENTRY_FEE,
+        amount: ENTRY_FEE_RAWS,
         label: 'End Of Month Guess',
         message: 'Thank you!',
         userNickname: data.nickname,
