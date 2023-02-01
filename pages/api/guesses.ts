@@ -5,11 +5,13 @@ import { TunedBigNumber } from "utils/nano";
 import { IPaymentResponse } from "types/checkout";
 import { GuessComplete, GuessData } from "types/guess";
 import prisma from "lib/prisma";
-import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, COIN_ID, isLocked, ENTRY_FEE, ENTRY_FEE_RAWS } from "config/config";
+import { CHECKOUT_API_KEY, CLOSE_DAY, CONVERT_SYMBOL, OPEN_DAY, COIN_ID, isLocked, ENTRY_FEE_RAWS } from "config/config";
 import { getLatestPrice } from "services/coingecko";
 
 const allowedSortBy = ['position', 'createdAt', 'price', 'nickname'];
 const allowedOrderBy = ['asc', 'desc'];
+
+const DEVELOPMENT_MODE = process.env.NODE_ENV === 'development';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
@@ -77,13 +79,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                     diff
                 }
             })
-            .sort((a, b) => a.diff - b.diff)
-            .map((guess, index) => {
-                return {
-                    ...guess,
-                    position: index + 1
-                }
-            });
+                .sort((a, b) => a.diff - b.diff)
+                .map((guess, index) => {
+                    return {
+                        ...guess,
+                        position: index + 1
+                    }
+                });
 
             /* Since we need sort to add position, we should sort by the other fields manually */
 
@@ -98,7 +100,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                     return 0;
                 });
             }
-            
+
             if (sortBy === 'nickname') {
                 response.values = response.values.sort((a, b) => {
                     if (a.nickname < b.nickname) {
@@ -230,43 +232,53 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 });
             }
 
-            // Get user IP
-            const ip = req.headers['x-forwarded-for'];
-            if (typeof ip !== 'string') {
-                return res.status(400).json({
-                    message: 'ip not found'
-                });
-            }
+            let ip;
 
-            const ipData = await prisma.iPs.findFirst({
-                where: {
-                    ip
-                }
-            });
+            // When running nin development mode, ip is local and we cannot
+            // retrieve ip data. Thus we should skip this check.
+            if (!DEVELOPMENT_MODE) {
 
-            // Ensure the ip data exists
-            if (ipData) {
-                // Ensure IP is not registered for this month competition
-                if (!!ipData.lastGuessAt && ipData.lastGuessAt >= new Date(startDate)) {
+                // Get user IP
+                ip = req.headers['x-forwarded-for'];
+                if (typeof ip !== 'string') {
                     return res.status(400).json({
-                        message: 'ip already exists'
+                        message: 'ip not found'
                     });
                 }
-            } else {
-                return res.status(400).json({
-                    message: 'ip not found'
+
+
+                const ipData = await prisma.iPs.findFirst({
+                    where: {
+                        ip
+                    }
                 });
+
+                // Ensure the ip data exists
+                if (ipData) {
+                    // Ensure IP is not registered for this month competition
+                    if (!!ipData.lastGuessAt && ipData.lastGuessAt >= new Date(startDate)) {
+                        return res.status(400).json({
+                            message: 'ip already exists'
+                        });
+                    }
+                } else {
+                    return res.status(400).json({
+                        message: 'ip not found'
+                    });
+                }
             }
 
-            // Update IP last guess date
-            await prisma.iPs.update({
-                where: {
-                    ip
-                },
-                data: {
-                    lastGuessAt: new Date()
-                }
-            });
+            if (!DEVELOPMENT_MODE) {
+                // Update IP last guess date
+                await prisma.iPs.update({
+                    where: {
+                        ip
+                    },
+                    data: {
+                        lastGuessAt: new Date()
+                    }
+                });
+            }
 
             // Save user guess to database
             const resp = await prisma.guess.create({

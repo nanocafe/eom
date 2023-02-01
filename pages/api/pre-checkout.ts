@@ -12,6 +12,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const startDate = new Date(new Date().setUTCDate(DEFAULT_OPEN_DAY)).setUTCHours(0, 0, 0, 0);
 
+const DEVELOPMENT_MODE = process.env.NODE_ENV === 'development';
+
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     try {
@@ -31,7 +33,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         // If running locally, skip the ip validation
-        if (process.env.NODE_ENV === 'development') {
+        if (DEVELOPMENT_MODE) {
             // await 2 seconds to simulate the ip validation
             await new Promise(resolve => setTimeout(resolve, 5000));
             return res.status(200).json({
