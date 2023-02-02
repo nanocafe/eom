@@ -25,7 +25,7 @@ const faqs = [
     ),
   },
   {
-    summary: <h2>When does the competition open</h2>,
+    summary: <h2>When does the competition open?</h2>,
     details: (
       <p>
         The competition opens on the first day of every month (can be changed),

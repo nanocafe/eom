@@ -22,7 +22,7 @@ function CountdownRender({ days, hours, minutes, seconds, completed }: Countdown
     } else {
         return (
             <div id="countdown" className='flex items-top space-x-1 sm:space-x-2 font-medium sm:font-semibold'>
-                <span className='text-base'>Ending In:</span>
+                <span className='text-base'>Locked In:</span>
                 <div className='flex space-x-1'>
                     <div className='text-center'>
                         <span className="text-xl text-red-400" id="ending-days">{pad(days)}</span>
