@@ -89,7 +89,7 @@ const faqs = [
     details: (
       <p>
         You can download and view the full rules and guidelines {' '}
-        <Link href="https://drive.proton.me/urls/V9EBR4FCK4#8hRMWMA2P9Vm">
+        <Link href="/docs/competition-rules-and-guidelines.pdf">
           <a className="text-gold hover:underline">here</a>
         </Link>
         .
