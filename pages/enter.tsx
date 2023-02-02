@@ -13,6 +13,7 @@ import {
   ArrowLeftCircleIcon,
   CheckCircleIcon,
   HomeIcon,
+  ExclamationCircleIcon,
 } from '@heroicons/react/20/solid'
 import {
   MAX_GUESS_PRICE,
@@ -23,6 +24,7 @@ import {
 } from 'core/constants'
 import { convert, Unit, checkAddress } from 'nanocurrency'
 import { ENTRY_FEE_RAWS, isLocked } from 'config/config'
+
 
 interface IFormData {
   nickname: string
@@ -388,8 +390,14 @@ export default function Enter() {
                   )}
                 </div>
               </form>
+              <div style={{textAlign:'center'}}>
+                <ExclamationCircleIcon className="h-6 w-6"></ExclamationCircleIcon>
+                <p>Entry Fee: 0.01XNO | Currently only supports submissions through <a href="https://chrome.google.com/webstore/detail/nanobyte/ndkdijcnlhjhmakblkhmpjocfjjifhbo" className="text-gold hover:underline"> Nanobyte</a>.
+                </p>
+              </div>
             </div>
           </div>
+          
         )}
       </main>
     </Layout>
