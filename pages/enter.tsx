@@ -235,19 +235,19 @@ export default function Enter() {
                       name="nickname"
                       control={control}
                       rules={{
-                        required: 'Nickname is required',
+                        required: 'A Name is required',
                         minLength: {
                           value: MIN_NICKNAME_LENGTH,
-                          message: `Nickname must be at least ${MIN_NICKNAME_LENGTH} characters`,
+                          message: `Name must be at least ${MIN_NICKNAME_LENGTH} characters`,
                         },
                         maxLength: {
                           value: MAX_NICKNAME_LENGTH,
-                          message: `Nickname must be at most ${MAX_NICKNAME_LENGTH} characters`,
+                          message: `Name must be at most ${MAX_NICKNAME_LENGTH} characters`,
                         },
                         pattern: {
                           value: /^[a-z0-9_]*$/,
                           message:
-                            'Nickname must be alphanumeric (a-z, 0-9) and lowercase',
+                            'Name must be alphanumeric (a-z, 0-9) and lowercase',
                         },
                         validate: {
                           isUnique: (value) => {
@@ -259,7 +259,7 @@ export default function Enter() {
                                 (guess: any) => guess.nickname === value,
                               )
                             ) {
-                              return 'This nickname is already taken!'
+                              return 'This Name is already taken!'
                             }
                             return true
                           },
@@ -268,7 +268,7 @@ export default function Enter() {
                       render={({ field }) => (
                         <Input
                           type="text"
-                          label="Nickname"
+                          label="Name"
                           id="nickname"
                           className="w-full"
                           disabled={isSuccess || isError || isPosting}

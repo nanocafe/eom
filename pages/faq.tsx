@@ -12,74 +12,75 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 
 const faqs = [
   {
-    summary: <h2>What is EOM and how do you win it?</h2>,
+    summary: <h2>What is EOM?</h2>,
     details: (
-      <h2>
-        EOM is short for End of the Month. This is a competition where you guess
-        what the price of XNO will be by the end of the month.
+      <ul>
+        <li>EOM is short for End Of the Month. It is a game where the goal is to guess what
+          the price of XNO will be by the end of each month.</li>
         <br></br>
-        <br></br>If you guess the closest match in either distance or exactness
-        to the price of XNO at the end of the month, then you win the
-        competition!
-      </h2>
+        <li>The winner is the person whose guess comes closest to the actual price of XNO at
+          the end of that month.</li>
+      </ul>
     ),
   },
   {
-    summary: <h2>When does the competition open?</h2>,
+    summary: <h2>When can you enter EOM?</h2>,
     details: (
-      <p>
-        The competition opens on the first day of every month (can be changed),
-        it is open from then till the 7th day of the corresponding month.
+      <ul>
+        <li>• EOM is a monthly contest.</li>
         <br></br>
-        <br></br>
-        After the 7th day, EOM gets locked and no new players are able to enter.
-        <br></br>
-        <br></br>
-        EOM is locked from the 7th day till the final day of the corresponding
-        month, more info on the exact time is available in the rules &
-        guidelines.
-      </p>
+        <li>• You may enter the contest from the 1st of each month until the 7th.
+After the seventh of the month, EOM gets closed and no additional players may
+enter.</li>
+      </ul>      
+
     ),
   },
   {
-    summary: <h2>How is this competition fair and what risks are involved?</h2>,
+    summary: <h2>Is the game fair?</h2>,
     details: (
-      <p>
-        This competiton is entirely fair because it depends on larger economic
-        forces outside of our control for determining the winner of the
-        competition. <br></br>
-        We do not control what the price of XNO is and we are not able to ever
-        control it.<br></br>
+      <ul>
+        <li>• It is fair because the winner is based solely on the actual price of XNO which is
+determined by the market forces outside of our control or influence.</li>
         <br></br>
-        Additionally, all the players in a competition have a historical
-        snapshot to reference so that no new users or players are added to the
-        competition after the date of competition being locked to its
-        corresponding month.
+        <li>• All participants in the competition have the same information regarding the
+performance history of XNO.</li>
         <br></br>
-        <br></br>EOM is also an open-source project, we have full honesty and
-        transparency. For this reason, anyone is able to see the code being used{' '}
-        <a
-          href="https://github.com/nanocafe/eom"
-          target="_blank"
-          className="text-gold hover:underline"
-        >
-          here on Github
-        </a>
-        .<br></br>
+        <li>• There is a {' '}
+          <a href="/transparency" target="_blank" className="text-gold hover:underline">snapshot</a> available to download and view after every contest is
+completed; you can verify no tampering took place in the contest using checksum
+(md5 and sha256).</li>
         <br></br>
-        The risks involved are that you are not guaranteed to win the
-        competition. And because of larger economic forces, it is extremely
-        difficult to predict the value of XNO at any date or time for that
-        matter.
-      </p>
+        <li>• EOM is an open-source project. There is complete transparency. Any game
+          participant can see the code being used on       {' '}
+          <a href="https://github.com/nanocafe/eom" target="_blank" className="text-gold hover:underline">
+            Github</a>.
+        </li>
+      </ul>
     ),
   },
   {
-    summary: <h2>What is the entry fee for EOM?</h2>,
+    summary: <h2>How much does it cost to participate in EOM?</h2>,
     details: (
       <p>
         The current entry fee for February 2023 EOM competition is 0.01XNO.
       </p>
+    ),
+  },
+  {
+    summary: <h2>Current Entry Fee Allocation</h2>,
+    details: (
+      <ul>
+        
+        <li>• 50% to increase current available reward.</li>
+        <br></br>
+        <li>• 25% to help with expenses for maintenance & operations.</li>
+        <br></br>
+        <li>• 15% to fund XNO community initiatives.</li>
+        <br></br>
+        <li>• 10% to help for development.</li>
+      </ul>         
+
     ),
   },
   {
