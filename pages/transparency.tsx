@@ -3,7 +3,6 @@ import {
   DocumentMagnifyingGlassIcon,
   HomeIcon,
 } from '@heroicons/react/20/solid'
-import { join } from '@prisma/client/runtime'
 import { useQuery } from '@tanstack/react-query'
 import Button from 'components/Button'
 import Layout from 'components/Layout'

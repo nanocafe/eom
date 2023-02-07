@@ -22,7 +22,7 @@ import {
   MIN_NICKNAME_LENGTH,
   STEP_GUESS_PRICE,
 } from 'core/constants'
-import { convert, Unit, checkAddress } from 'nanocurrency'
+import { checkAddress } from 'nanocurrency'
 import { ENTRY_FEE_RAWS, isLocked } from 'config/config'
 
 
