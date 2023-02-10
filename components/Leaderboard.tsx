@@ -28,7 +28,7 @@ export default function LeaderBoard({
   winner,
 }: LeaderBoardProps) {
   const showingFrom = (currentPage - 1) * limit + 1
-  const showingTo = (currentPage - 1) * limit + total
+  const showingTo = showingFrom + guesses.length - 1
 
   return (
     <div className="w-full">
