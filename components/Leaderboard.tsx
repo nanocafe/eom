@@ -28,7 +28,7 @@ export default function LeaderBoard({
   winner,
 }: LeaderBoardProps) {
   const showingFrom = (currentPage - 1) * limit + 1
-  const showingTo = (currentPage - 1) * limit + guesses?.values?.length
+  const showingTo = (currentPage - 1) * limit + total
 
   return (
     <div className="w-full">
@@ -132,22 +132,8 @@ export default function LeaderBoard({
         </div>
 
         <div className="flex items-center justify-betweenpx-4 py-2">
-          <div className="flex flex-1 justify-between sm:hidden">
-            <a
-              href="#"
-              className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Previous
-            </a>
-            <a
-              href="#"
-              className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Next
-            </a>
-          </div>
-          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-            <div>
+          <div className="flex flex-1 flex-wrap items-center justify-center sm:justify-between">
+            <div className='hidden sm:block'>
               <p
                 className="text-sm px-2"
                 style={{
