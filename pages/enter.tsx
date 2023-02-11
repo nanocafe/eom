@@ -171,7 +171,7 @@ export default function Enter() {
         </div>
 
         {isLocked() ? (
-          <ErrorAlert title="Competiton is Currently Locked" messages={["The game is currently locked.", "Please try again later."]} />
+          <ErrorAlert title="EOM is currently closed for entry!" messages={["This month's contest is locked.", "It ends on the last day of the month and it re-opens within the first few days of the next month."]} />
         ) : (
           <div className="w-full flex justify-center">
             <div

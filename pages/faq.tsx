@@ -68,11 +68,11 @@ completed; you can verify no tampering took place in the contest using checksum
     ),
   },
   {
-    summary: <h2>Current Entry Fee Allocation</h2>,
+    summary: <h2>What is the Entry Fee used for?</h2>,
     details: (
       <ul>
         
-        <li>• 50% to increase current available reward.</li>
+        <li>• 50% to increase the current available reward.</li>
         <br></br>
         <li>• 25% to help with expenses for maintenance & operations.</li>
         <br></br>
