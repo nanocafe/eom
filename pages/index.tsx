@@ -57,14 +57,14 @@ export default function Home() {
           className="w-full flex justify-center pb-2 sm:pt-2"
         >
           <div className="flex flex-col items-center">
-            <h5 className="text-sm sm:text-lg">Total Reward Available</h5>
+            <h5 className="text-sm sm:text-lg">February 2023 EOM Reward</h5>
             <h3
               className="text-2xl sm:text-3xl font-bold"
               style={{
                 textShadow: '0 0 5px #e2b731',
               }}
             >
-              20 XNO
+              20.12 XNO 
             </h3>
             <div className="text-gray-300 mt-1 flex space-x-4">
               <span>________</span>{' '}
