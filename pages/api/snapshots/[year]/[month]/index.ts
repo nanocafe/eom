@@ -1,7 +1,7 @@
-import { COIN_ID, CONVERT_SYMBOL, isLocked } from "config/config";
+import { CLOSE_DAY, COIN_ID, CONVERT_SYMBOL, isLocked } from "config/config";
 import prisma from "lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getRangePrice } from "services/coingecko";
+import { getLatestPrice, getRangePrice } from "services/coingecko";
 import { GuessComplete } from "types/guess";
 import crypto from "crypto";
 import Papa from 'papaparse';
@@ -58,6 +58,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         const startDate = new Date(new Date().setUTCFullYear(year, month - 1, 1)).setUTCHours(0, 0, 0, 0);
+        const endDate = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(23, 59, 59, 999);
         const endofMonth = new Date(new Date().setUTCFullYear(year, month, 0)).setUTCHours(23, 59, 59, 999);
 
         if (Date.now() < startDate) {
@@ -66,31 +67,35 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             });
         }
 
-        if (Date.now() < endofMonth) {
+        if (!isLocked()) {
             return res.status(400).json({
                 message: 'this competition has not ended yet'
             });
         }
 
-        const dateFilter = {
-            createdAt: {
-                gte: new Date(startDate),
-                lte: new Date(endofMonth)
-            }
-        }
+        let lastPrice: number;
 
-        /*
-            Get the price at the end of the month
-            We cannot get the latest price from a specific time (hh:mm:ss)
-            So we get the prices of the last 12 hours of the month and use the last one
-        */
-        const endDateSafeInitialRange = new Date(endofMonth).setUTCHours(12, 0, 0, 0);
-        const prices = await getRangePrice(COIN_ID, CONVERT_SYMBOL, endDateSafeInitialRange, endofMonth);
-        const lastPrice = prices[prices.length - 1];
+        if (Date.now() >= endofMonth) {
+            /*
+                Get the price at the end of the month
+                We cannot get the latest price from a specific time (hh:mm:ss)
+                So we get the prices of the last 12 hours of the month and use the last one
+            */
+            const endDateSafeInitialRange = new Date(endofMonth).setUTCHours(12, 0, 0, 0);
+            const prices = await getRangePrice(COIN_ID, CONVERT_SYMBOL, endDateSafeInitialRange, endofMonth);
+            lastPrice = prices[prices.length - 1];
+        } else {
+            lastPrice = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
+        }
 
         // Get all guesses from the snapshot month
         const guesses = await prisma.guess.findMany({
-            where: dateFilter,
+            where: {
+                createdAt: {
+                    gte: new Date(startDate),
+                    lte: new Date(endofMonth)
+                }
+            },
             orderBy: {
                 createdAt: 'asc'
             },
@@ -136,8 +141,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 }
             });
 
-        // Add winner only if the competition is locked
-        if (isLocked()) {
+        // Add winner only if the month is ended
+        if (Date.now() >= endofMonth) {
             response.winner = response.values[0].id;
         }
 

@@ -11,7 +11,7 @@ import { faker } from '@faker-js/faker';
 import prisma from "lib/prisma";
 import { deriveAddress, derivePublicKey, deriveSecretKey, generateSeed } from 'nanocurrency';
 import { CLOSE_DAY, OPEN_DAY } from "config/config";
-import { GuessComplete, GuessData } from "types/guess";
+import { GuessData } from "types/guess";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 
