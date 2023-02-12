@@ -1,4 +1,4 @@
-import { CLOSE_DAY, COIN_ID, CONVERT_SYMBOL, isLocked } from "config/config";
+import { COIN_ID, CONVERT_SYMBOL, isLocked } from "config/config";
 import prisma from "lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getLatestPrice, getRangePrice } from "services/coingecko";
@@ -58,7 +58,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         const startDate = new Date(new Date().setUTCFullYear(year, month - 1, 1)).setUTCHours(0, 0, 0, 0);
-        const endDate = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(23, 59, 59, 999);
         const endofMonth = new Date(new Date().setUTCFullYear(year, month, 0)).setUTCHours(23, 59, 59, 999);
 
         if (Date.now() < startDate) {
