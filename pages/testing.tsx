@@ -22,7 +22,7 @@ export default function Home() {
   useEffect(() => {
     refetch()
   }, [currentPage, limit, guesses])
-  const currentReward = (0.05 * currentEntries).toFixed(2);
+  const currentReward = (0.005 * currentEntries).toFixed(2);
   return (
     <Layout
       navbarOption={
