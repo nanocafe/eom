@@ -13,6 +13,7 @@ const DEFAULT_PAGINATION_LIMIT = 10
 export default function Home() {
   const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT)
   const [currentPage, setCurrentPage] = useState(1)
+  const [currentEntries, setCurrentEntries] = useState(0)
 
   const { data: guesses, isLoading, refetch } = useQuery(['guesses'], () =>
     api.get(`/guesses?page=${currentPage}&limit=${limit}`),
@@ -20,8 +21,8 @@ export default function Home() {
 
   useEffect(() => {
     refetch()
-  }, [currentPage, limit])
-
+  }, [currentPage, limit, guesses])
+  const currentReward = (0.005 * currentEntries).toFixed(2);
   return (
     <Layout
       navbarOption={
@@ -58,14 +59,11 @@ export default function Home() {
         >
           <div className="flex flex-col items-center">
             <h5 className="text-sm sm:text-lg">February 2023 EOM Reward</h5>
-            <h3
-              className="text-2xl sm:text-3xl font-bold"
+             <h3              className="text-2xl sm:text-3xl font-bold"
               style={{
                 textShadow: '0 0 5px #e2b731',
               }}
-            >
-              20.12 XNO 
-            </h3>
+            >{currentReward} XNO</h3>
             <div className="text-gray-300 mt-1 flex space-x-4">
               <span>________</span>{' '}
               <img src="/icons/laurel.png" className="-mt-2 w-12 sm:w-16" />{' '}
