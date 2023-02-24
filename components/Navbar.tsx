@@ -1,21 +1,21 @@
-import { useQuery } from '@tanstack/react-query'
-import { CONVERT_SYMBOL, DEADLINE } from 'config/config'
-import { DEFAULT_CLOSE_DAY } from 'core/constants'
-import { ReactNode } from 'react'
-import API from 'services/api'
-import { classNames } from 'utils'
-import CountdownViewer from './CountdownViewer'
+import { useQuery } from "@tanstack/react-query";
+import { CONVERT_SYMBOL, DEADLINE } from "config/config";
+import { DEFAULT_CLOSE_DAY } from "core/constants";
+import { ReactNode } from "react";
+import API from "services/api";
+import { classNames } from "utils";
+import CountdownViewer from "./CountdownViewer";
 
 export interface NavbarProps {
   option?: ReactNode | string;
 }
 
 export default function Navbar({ option }: NavbarProps) {
-
-  const { data: price, error: priceError, isLoading } = useQuery(
-    ['price'],
-    () => API.get('/price'),
-  )
+  const {
+    data: price,
+    error: priceError,
+    isLoading,
+  } = useQuery(["price"], () => API.get("/price"));
 
   return (
     <nav className="w-full flex flex-col items-center">
@@ -59,17 +59,15 @@ export default function Navbar({ option }: NavbarProps) {
                 <div>XNO/USD:</div>
                 <div
                   className={classNames(
-                    'text-base font-bold text-green-400',
-                    price.usd_24h_change > 0
-                      ? 'text-green-400'
-                      : 'text-red-400',
+                    "text-base font-bold text-green-400",
+                    price.usd_24h_change > 0 ? "text-green-400" : "text-red-400"
                   )}
                   id="nano-price"
                 >
                   $
                   {
                     price?.[CONVERT_SYMBOL].toString().match(
-                      /^-?\d+(?:\.\d{0,3})?/,
+                      /^-?\d+(?:\.\d{0,3})?/
                     )[0]
                   }
                 </div>
@@ -80,5 +78,5 @@ export default function Navbar({ option }: NavbarProps) {
         </div>
       </div>
     </nav>
-  )
+  );
 }
