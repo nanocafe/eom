@@ -2,26 +2,28 @@ import {
   ArrowDownTrayIcon,
   DocumentMagnifyingGlassIcon,
   HomeIcon,
-} from '@heroicons/react/20/solid'
-import { useQuery } from '@tanstack/react-query'
-import Button from 'components/Button'
-import Layout from 'components/Layout'
-import Link from 'next/link'
-import API from 'services/api'
+} from "@heroicons/react/20/solid";
+import { useQuery } from "@tanstack/react-query";
+import Button from "components/Button";
+import Layout from "components/Layout";
+import Link from "next/link";
+import API from "services/api";
 
 export default function Transparency() {
-  const { data: competitions, isLoading, isError, error } = useQuery(
-    ['competitions'],
-    () => API.get('/competitions'),
-  )
+  const {
+    data: competitions,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(["competitions"], () => API.get("/competitions"));
 
-  if (isLoading) return <Layout>Loading...</Layout>
+  if (isLoading) return <Layout>Loading...</Layout>;
 
   const monthName = (year: number, month: number) => {
-    return new Date(year, month - 1, 1).toLocaleString('default', {
-      month: 'long',
-    })
-  }
+    return new Date(year, month - 1, 1).toLocaleString("default", {
+      month: "long",
+    });
+  };
 
   return (
     <Layout
@@ -30,7 +32,7 @@ export default function Transparency() {
           <a>
             <Button
               style={{
-                width: '100px',
+                width: "100px",
               }}
             >
               <HomeIcon className="w-5 h-5 mr-2" />
@@ -42,8 +44,8 @@ export default function Transparency() {
     >
       <section className="my-2 py-6 px-2 border-b border-dim-gray">
         <h2 className="text-xl text-gold">Competition Rules and Guidelines</h2>
-        <p className="text-sm text-gray-200">Updated 5th February 2023</p>
-        <div className='flex justify-center sm:justify-start mt-4'>
+        <p className="text-sm text-gray-200">Updated 23rd February 2023</p>
+        <div className="flex justify-center sm:justify-start mt-4">
           <a
             href="/docs/competition-rules-and-guidelines.pdf"
             target="_blank"
@@ -72,7 +74,7 @@ export default function Transparency() {
                       <div className="flex-1 text-center">
                         <span className="font-semibold">
                           {competitions[year][month]}
-                        </span>{' '}
+                        </span>{" "}
                         guesses
                       </div>
                       <div>
@@ -82,10 +84,10 @@ export default function Transparency() {
                   </a>
                 </Link>
               </li>
-            )),
+            ))
           )}
         </ul>
       </section>
     </Layout>
-  )
+  );
 }
