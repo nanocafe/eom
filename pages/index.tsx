@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <Layout
       navbarOption={
-        isLocked() ? (
+        !isLocked() ? (
           <Link href="/enter">
             <a>
               <Button
@@ -33,7 +33,7 @@ export default function Home() {
                   width: '150px',
                 }}
               >
-                <LockClosedIcon className="w-5 h-5 mr-2" />
+                <LockOpenIcon className="w-5 h-5 mr-2" />
                 Enter Now
               </Button>
             </a>
