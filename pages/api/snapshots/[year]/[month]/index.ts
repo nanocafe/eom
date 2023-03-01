@@ -59,6 +59,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
         const startDate = new Date(new Date().setUTCFullYear(year, month - 1, 1)).setUTCHours(0, 0, 0, 0);
         const endofMonth = new Date(new Date().setUTCFullYear(year, month, 0)).setUTCHours(23, 59, 59, 999);
+        const isCurrentCompetition = Date.now() >= startDate && Date.now() <= endofMonth;
 
         if (Date.now() < startDate) {
             return res.status(400).json({
@@ -66,7 +67,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             });
         }
 
-        if (!isLocked()) {
+        if (isCurrentCompetition && !isLocked()) {
             return res.status(400).json({
                 message: 'this competition has not ended yet'
             });
@@ -82,7 +83,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             */
             const endDateSafeInitialRange = new Date(endofMonth).setUTCHours(12, 0, 0, 0);
             const prices = await getRangePrice(COIN_ID, CONVERT_SYMBOL, endDateSafeInitialRange, endofMonth);
-            lastPrice = prices[prices.length - 1];
+            lastPrice = prices[prices.length - 1][1];
         } else {
             lastPrice = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
         }
