@@ -74,6 +74,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         }
 
         let lastPrice: number;
+        let lastPriceUrl: string;
 
         if (Date.now() >= endofMonth) {
             /*
@@ -82,10 +83,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 So we get the prices of the last 12 hours of the month and use the last one
             */
             const endDateSafeInitialRange = new Date(endofMonth).setUTCHours(12, 0, 0, 0);
-            const prices = await getRangePrice(COIN_ID, CONVERT_SYMBOL, endDateSafeInitialRange, endofMonth);
+            const { prices, url } = await getRangePrice(COIN_ID, CONVERT_SYMBOL, endDateSafeInitialRange, endofMonth);
             lastPrice = prices[prices.length - 1][1];
+            lastPriceUrl = url;
         } else {
-            lastPrice = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
+            const { usd, url } = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
+            lastPrice = usd;
+            lastPriceUrl = url;
         }
 
         // Get all guesses from the snapshot month
@@ -113,6 +117,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             total: guesses.length,
             values: [] as GuessComplete[],
             winner: null as number | null,
+            lastPrice,
+            lastPriceUrl,
             checksum: {
                 csv: {
                     sha256: crypto.createHash('sha256').update(csv).digest('hex'),
