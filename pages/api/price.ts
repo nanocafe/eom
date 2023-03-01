@@ -11,8 +11,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             });
         }
 
-        const data = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
-        res.status(200).json(data);
+        const { usd, usd_24h_change, url } = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
+        res.status(200).json({ usd, usd_24h_change, url });
     } catch (e) {
         console.error("error", e)
         res.status(500).json({

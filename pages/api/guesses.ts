@@ -58,7 +58,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 });
             }
 
-            const { [CONVERT_SYMBOL]: price } = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
+            const { usd: price } = await getLatestPrice(COIN_ID, CONVERT_SYMBOL);
 
             // Get all guesses from the current month
             const allGuesses = await prisma.guess.findMany({
