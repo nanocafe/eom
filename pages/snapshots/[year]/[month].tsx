@@ -6,10 +6,8 @@ import { useEffect, useState } from 'react'
 import api from 'services/api'
 import Button from 'components/Button'
 import { ArrowDownTrayIcon } from '@heroicons/react/20/solid'
-import {
-  DocumentMagnifyingGlassIcon,
-  InformationCircleIcon,
-} from '@heroicons/react/24/outline'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { toFixedSafe } from 'utils'
 const DEFAULT_PAGINATION_LIMIT = 10
 
 export default function SnapshotsPage() {
@@ -47,7 +45,7 @@ export default function SnapshotsPage() {
 
   const winner = snapshot?.winner
 
-  const monthName = new Date(year, month - 1, 1).toLocaleString('default', {
+  const monthName = new Date(year, month - 1, 1).toLocaleString('en-US', {
     month: 'long',
   })
 
@@ -59,13 +57,39 @@ export default function SnapshotsPage() {
             <a className="text-gray-300 hover:text-gray-100">Back to Home</a>
           </Link>
         </div>
-        <h1 className="text-xl py-4 border-b mb-4 border-dim-gray">
+        <h1 className="text-xl py-4 border-b border-dim-gray">
           Snapshot for{' '}
           <span className="text-gold">
             {monthName} {year}
           </span>{' '}
           competition
         </h1>
+        <div className="flex space-x-4 justify-between items-center py-4 border-b border-dim-gray">
+          <p className="text-base">
+            {winner ? 'Final Price:' : 'Current Price:'}{' '}
+            <span className="text-lg font-bold text-gold">
+              ${toFixedSafe(snapshot?.lastPrice, 3)}
+            </span>
+          </p>
+          <p className="text-sm">
+            {winner ? (
+              <a
+                href={snapshot?.lastPriceUrl}
+                target="_blank"
+                className="flex underline hover:text-gold"
+              >
+                <InformationCircleIcon className="w-5 h-5 mr-1" />
+                Source: CoinGecko
+              </a>
+            ) : (
+              <span className='flex font-bold'>
+                <InformationCircleIcon className="w-5 h-5 mr-1" />
+                Not finished yet
+              </span>
+            )}
+          </p>
+        </div>
+        <div className="mb-4" />
         <LeaderBoard
           guesses={snapshot?.values || []}
           total={snapshot?.total}
@@ -81,7 +105,8 @@ export default function SnapshotsPage() {
           <div className="flex flex-wrap justify-between">
             <div className="max-w-full break-all mt-2 text-sm text-white">
               <p>
-                <span className="text-gold">MD5:</span> {snapshot?.checksum.csv.md5}
+                <span className="text-gold">MD5:</span>{' '}
+                {snapshot?.checksum.csv.md5}
               </p>
               <p className="mt-1">
                 <span className="text-gold">SHA-256:</span>{' '}
