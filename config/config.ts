@@ -24,4 +24,7 @@ export const DEADLINE = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(
     999,
 );
 
-export const isLocked = () => Date.now() > DEADLINE;
+export const isLocked = () => {
+    const todayDate = new Date().getUTCDate();
+    return todayDate < OPEN_DAY || Date.now() > DEADLINE;
+}
