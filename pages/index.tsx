@@ -7,6 +7,7 @@ import LeaderBoard from 'components/Leaderboard'
 import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/20/solid'
 import Button from 'components/Button'
 import { isLocked } from 'config/config'
+import { getCurrentMonthName } from 'utils'
 
 const DEFAULT_PAGINATION_LIMIT = 10
 
@@ -57,7 +58,7 @@ export default function Home() {
           className="w-full flex justify-center pb-2 sm:pt-2"
         >
           <div className="flex flex-col items-center">
-            <h5 className="text-sm sm:text-lg">February 2023 EOM Reward</h5>
+            <h5 className="text-sm sm:text-lg">{getCurrentMonthName()} 2023 EOM Reward</h5>
             <h3
               className="text-2xl sm:text-3xl font-bold"
               style={{
