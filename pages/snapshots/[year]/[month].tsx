@@ -68,7 +68,7 @@ export default function SnapshotsPage() {
           <p className="text-base">
             {winner ? 'Final Price:' : 'Current Price:'}{' '}
             <span className="text-lg font-bold text-gold">
-              ${toFixedSafe(snapshot?.lastPrice, 3)}
+              ${snapshot?.lastPrice ? toFixedSafe(snapshot?.lastPrice, 3) : '---'}
             </span>
           </p>
           <p className="text-sm">
