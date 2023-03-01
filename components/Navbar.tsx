@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { CONVERT_SYMBOL, DEADLINE } from "config/config";
-import { DEFAULT_CLOSE_DAY } from "core/constants";
+import { DEFAULT_CLOSE_DAY, MAX_DECIMALS } from "core/constants";
 import { ReactNode } from "react";
 import API from "services/api";
-import { classNames } from "utils";
+import { classNames, toFixedSafe } from "utils";
 import CountdownViewer from "./CountdownViewer";
 
 export interface NavbarProps {
@@ -66,9 +66,7 @@ export default function Navbar({ option }: NavbarProps) {
                 >
                   $
                   {
-                    price?.[CONVERT_SYMBOL].toString().match(
-                      /^-?\d+(?:\.\d{0,3})?/
-                    )[0]
+                    toFixedSafe(price.usd, MAX_DECIMALS)
                   }
                 </div>
               </div>
