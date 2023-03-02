@@ -104,6 +104,20 @@ const faqs = [
     ),
   },
   {
+    summary: <h2>Where and when is the price of XNO pulled from?</h2>,
+    details: (
+      <p>
+        The price is pulled from the coinGecko{" "}
+        <a href="https://www.coingecko.com/en/coins/nano" target="_blank">
+          API
+        </a>
+        . <br />
+        It is requested at the last day of the month and typically is available
+        between 4:55AM – 5:05AM UTC. <br />
+      </p>
+    ),
+  },
+  {
     summary: <h2>Can I see the full rules and guidelines for EOM?</h2>,
     details: (
       <p>
