@@ -6,10 +6,14 @@ import { useEffect, useState } from 'react'
 import LeaderBoard from 'components/Leaderboard'
 import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/20/solid'
 import Button from 'components/Button'
-import { isLocked } from 'config/config'
-import { getCurrentMonthName } from 'utils'
+import { ENTRY_FEE, ENTRY_FEE_RAWS, isLocked } from 'config/config'
+import { getCurrentMonthName, toFixedSafe } from 'utils'
+import { TunedBigNumber } from 'utils/nano'
+import { convert, Unit } from 'nanocurrency'
+import BigNumber from 'bignumber.js'
 
 const DEFAULT_PAGINATION_LIMIT = 10
+const CURRENT_MONTH_BASE_REWARD = 56.84
 
 export default function Home() {
   const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT)
@@ -22,6 +26,15 @@ export default function Home() {
   useEffect(() => {
     refetch()
   }, [currentPage, limit])
+
+  
+  const base_reward_raws = convert(CURRENT_MONTH_BASE_REWARD.toString(), { from: Unit.NANO, to: Unit.raw });
+  let acumulated_fees = guesses?.values?.reduce((acc: BigNumber, guess: any) => {
+    console.log(guess)
+    return acc.plus(ENTRY_FEE_RAWS)
+  }, TunedBigNumber(0)) || TunedBigNumber(0)
+  const reward_raws = TunedBigNumber(base_reward_raws).plus(acumulated_fees).toString();
+  const reward = toFixedSafe(convert(reward_raws, { from: Unit.raw, to: Unit.NANO }), 3);
 
   return (
     <Layout
@@ -65,7 +78,7 @@ export default function Home() {
                 textShadow: '0 0 5px #e2b731',
               }}
             >
-              56.84 XNO 
+              {reward} XNO 
             </h3>
             <div className="text-gray-300 mt-1 flex space-x-4">
               <span>________</span>{' '}
