@@ -6,14 +6,14 @@ import { useEffect, useState } from 'react'
 import LeaderBoard from 'components/Leaderboard'
 import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/20/solid'
 import Button from 'components/Button'
-import { ENTRY_FEE, ENTRY_FEE_RAWS, isLocked } from 'config/config'
+import { ENTRY_FEE, ENTRY_FEE_RAWS, FEE_POOL_ALLOCATION, isLocked } from 'config/config'
 import { getCurrentMonthName, toFixedSafe } from 'utils'
 import { TunedBigNumber } from 'utils/nano'
 import { convert, Unit } from 'nanocurrency'
 import BigNumber from 'bignumber.js'
 
-const DEFAULT_PAGINATION_LIMIT = 10
-const CURRENT_MONTH_BASE_REWARD = 56.84
+const DEFAULT_PAGINATION_LIMIT = 10;
+const CURRENT_MONTH_BASE_REWARD = 56.84;
 
 export default function Home() {
   const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT)
@@ -30,8 +30,8 @@ export default function Home() {
   
   const base_reward_raws = convert(CURRENT_MONTH_BASE_REWARD.toString(), { from: Unit.NANO, to: Unit.raw });
   let acumulated_fees = guesses?.values?.reduce((acc: BigNumber, guess: any) => {
-    console.log(guess)
-    return acc.plus(ENTRY_FEE_RAWS)
+    const feeToAllocate = TunedBigNumber(ENTRY_FEE_RAWS).multipliedBy(FEE_POOL_ALLOCATION);
+    return acc.plus(feeToAllocate)
   }, TunedBigNumber(0)) || TunedBigNumber(0)
   const reward_raws = TunedBigNumber(base_reward_raws).plus(acumulated_fees).toString();
   const reward = toFixedSafe(convert(reward_raws, { from: Unit.raw, to: Unit.NANO }), 3);

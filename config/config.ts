@@ -9,6 +9,8 @@ export const ENTRY_FEE = process.env.NEXT_PUBLIC_ENTRY_FEE || DEFAULT_NEXT_PUBLI
 
 export const ENTRY_FEE_RAWS = convert(ENTRY_FEE, { from: Unit.NANO, to: Unit.raw });
 
+export const FEE_POOL_ALLOCATION = Number(process.env.NEXT_PUBLIC_FEE_POOL_ALLOCATION || 0.5); // 0.5 = 50%
+
 export const CHECKOUT_API_KEY = process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '';
 
 export const LATEST_PRICE_CACHE_TIME = 60 * 1000; // 1 minute in milliseconds
