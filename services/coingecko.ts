@@ -18,7 +18,6 @@ export const getLatestPrice = async (coinId: string, convertTo: string, with24hC
             usd_24h_change: cachedResponse.usd_24h_change
         };
     } else {
-        console.log("Fetching latest price from coingecko")
         const response = await axios.get(url, {
             headers: { "Accept-Encoding": "gzip,deflate,compress" }
         });

@@ -23,7 +23,7 @@ import {
   STEP_GUESS_PRICE,
 } from 'core/constants'
 import { checkAddress } from 'nanocurrency'
-import { ENTRY_FEE_RAWS, isLocked } from 'config/config'
+import { ENTRY_FEE, ENTRY_FEE_RAWS, isLocked } from 'config/config'
 
 
 interface IFormData {
@@ -392,7 +392,7 @@ export default function Enter() {
               </form>
               <div style={{textAlign:'center'}}>
                 <ExclamationCircleIcon className="h-6 w-6"></ExclamationCircleIcon>
-                <p>Entry Fee: 0.01XNO | Currently only supports submissions through <a href="https://chrome.google.com/webstore/detail/nanobyte/ndkdijcnlhjhmakblkhmpjocfjjifhbo" className="text-gold hover:underline"> Nanobyte</a>.
+                <p>Entry Fee: {ENTRY_FEE} XNO | Currently only supports submissions through <a href="https://chrome.google.com/webstore/detail/nanobyte/ndkdijcnlhjhmakblkhmpjocfjjifhbo" className="text-gold hover:underline"> Nanobyte</a>.
                 </p>
               </div>
             </div>
