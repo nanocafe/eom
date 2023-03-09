@@ -344,7 +344,7 @@ export default function Enter() {
                   ) : error ? (
                     <>
                       <ErrorAlert
-                        title={`Payment Error: ${error}`}
+                        title={`Payment Error: ${typeof error === 'string' ? error : JSON.stringify(error)}`}
                         messages={[
                           'Save your payment id and contact support if you think this is a mistake',
                         ]}
