@@ -177,7 +177,7 @@ export default function Home() {
                   aria-modal="true"
                   aria-labelledby="modal-title"
                 >
-                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="bg-gray-600 text-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
                         {" "}
@@ -186,20 +186,21 @@ export default function Home() {
 
                       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <h3
-                          className="text-lg leading-6 font-medium text-gray-900"
+                          className="text-lg leading-6 font-bold"
                           id="modal-title"
                         >
                           How do you play EOM?
                         </h3>
                         <div className="mt-2">
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm">
                             You have to make a guess at what the price of XNO
-                            will be on the final day of the month, though before
+                            will be on the last day of the month, though before
                             you can enter the contest, make sure you have either
-                            nanobyte (desktop) or nautilus (mobile) installed.
+                            Nanobyte (desktop) or Nautilus (mobile) XNO wallet
+                            installed.
                           </p>
                           <br />
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm">
                             You can submit this guess by clicking the "Enter"
                             button. This will take you to the submit screen.
                             <br />
@@ -211,7 +212,7 @@ export default function Home() {
                             entry fee.
                           </p>
                           <br />
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm">
                             After the contest is locked, you wait till the final
                             day of the month - if then you had the closest or
                             exact price, you win the reward!
@@ -221,7 +222,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <div className="bg-gray-600 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button
                       type="button"
                       className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gold text-base font-medium text-white hover:bg-gold-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold-dark sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
