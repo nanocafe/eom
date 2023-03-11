@@ -1,73 +1,83 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    background-color: #4a4a4a;
-    color: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-        'Helvetica Neue', Arial, Noto Sans, sans-serif, 'Apple Color Emoji',
-        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  margin: 0;
+  background-color: #4a4a4a;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, Noto Sans, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .btn-transparency {
-    color: #eee;
-    border-color: #ccc;
-    background-color: transparent;
-    font-size: 1rem;
-    letter-spacing: .2rem;
+  color: #eee;
+  border-color: #ccc;
+  background-color: transparent;
+  font-size: 1rem;
+  letter-spacing: 0.2rem;
 }
 
 .btn-transparency:hover {
-    background-color: #ccc;
+  background-color: #ccc;
 }
 
-.pagination>li, .pagination>li:first-child, .pagination>li:last-child {
-    width: 22px;
-    height: 22px;
-    background-color: #606060;
-    color: white;
-    border: 0;
-    margin: 2px;
-    font-size: .7rem;
-    line-height: 20px;
-    text-align: center;
-    border-radius: 100%;
-    padding: 0;
+.pagination > li,
+.pagination > li:first-child,
+.pagination > li:last-child {
+  width: 22px;
+  height: 22px;
+  background-color: #606060;
+  color: white;
+  border: 0;
+  margin: 2px;
+  font-size: 0.7rem;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 100%;
+  padding: 0;
 }
 
-.pagination>li:hover, .pagination>li:first-child:hover, .pagination>li:last-child:hover {
-    background-color: #eee;
-    color: #000;
+.pagination > li:hover,
+.pagination > li:first-child:hover,
+.pagination > li:last-child:hover {
+  background-color: #eee;
+  color: #000;
 }
 
-.pagination>li.active, .pagination>li.active:hover {
-    background-color: #e2b731;
-    color: #fff;
+.pagination > li.active,
+.pagination > li.active:hover {
+  background-color: #e2b731;
+  color: #fff;
 }
 
 .loading {
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .loading:after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    transform: translateX(-100px);
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-    animation: loading 0.8s infinite;
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100px);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  animation: loading 0.8s infinite;
 }
 
 @keyframes loading {
-    100% {
-        transform: translateX(100%);
-    }
+  100% {
+    transform: translateX(100%);
+  }
 }
