@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { CONVERT_SYMBOL, DEADLINE } from "config/config";
 import { DEFAULT_CLOSE_DAY, MAX_DECIMALS } from "core/constants";
+import Link from "next/link";
 import { ReactNode } from "react";
 import API from "services/api";
 import { classNames, toFixedSafe } from "utils";
@@ -64,13 +65,15 @@ export default function Navbar({ option }: NavbarProps) {
                   )}
                   id="nano-price"
                 >
-                  $
-                  {
-                    toFixedSafe(price.usd, MAX_DECIMALS)
-                  }
+                  ${toFixedSafe(price.usd, MAX_DECIMALS)}
                 </div>
               </div>
-            )}
+            )}{" "}
+            <Link href="/announcements">
+              <a className="px-2 py-1 text-gold/80 hover:text-gold">
+                Announcements
+              </a>
+            </Link>
           </div>
           <CountdownViewer date={DEADLINE} />
         </div>
