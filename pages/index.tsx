@@ -1,68 +1,61 @@
-import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import Layout from "components/Layout";
-import api from "services/api";
-import { useEffect, useState } from "react";
-import LeaderBoard from "components/Leaderboard";
-import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/20/solid";
-import Button from "components/Button";
+import Link from 'next/link'
+import { useQuery } from '@tanstack/react-query'
+import Layout from 'components/Layout'
+import api from 'services/api'
+import { useEffect, useState } from 'react'
+import LeaderBoard from 'components/Leaderboard'
+import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/20/solid'
+import Button from 'components/Button'
 import {
   ENTRY_FEE,
   ENTRY_FEE_RAWS,
   FEE_POOL_ALLOCATION,
   isLocked,
-} from "config/config";
-import { getCurrentMonthName, toFixedSafe } from "utils";
-import { TunedBigNumber } from "utils/nano";
-import { convert, Unit } from "nanocurrency";
-import BigNumber from "bignumber.js";
-import InformationCircleIcon from "@heroicons/react/24/outline/InformationCircleIcon";
+} from 'config/config'
+import { getCurrentMonthName, toFixedSafe } from 'utils'
+import { TunedBigNumber } from 'utils/nano'
+import { convert, Unit } from 'nanocurrency'
+import BigNumber from 'bignumber.js'
+import InformationCircleIcon from '@heroicons/react/24/outline/InformationCircleIcon'
 
-const DEFAULT_PAGINATION_LIMIT = 10;
-const CURRENT_MONTH_BASE_REWARD = 56.84;
+const DEFAULT_PAGINATION_LIMIT = 10
+const CURRENT_MONTH_BASE_REWARD = 56.84
 
 export default function Home() {
-  const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
+  const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [showModal, setShowModal] = useState(false)
 
   const handleModalClose = () => {
-    setShowModal(false);
-  };
+    setShowModal(false)
+  }
 
   const handleNotificationClick = () => {
-    setShowModal(true);
-  };
+    setShowModal(true)
+  }
 
-  const {
-    data: guesses,
-    isLoading,
-    refetch,
-  } = useQuery(["guesses"], () =>
-    api.get(`/guesses?page=${currentPage}&limit=${limit}`)
-  );
+  const { data: guesses, isLoading, refetch } = useQuery(['guesses'], () =>
+    api.get(`/guesses?page=${currentPage}&limit=${limit}`),
+  )
 
   useEffect(() => {
-    refetch();
-  }, [currentPage, limit]);
+    refetch()
+  }, [currentPage, limit])
 
   const base_reward_raws = convert(CURRENT_MONTH_BASE_REWARD.toString(), {
     from: Unit.NANO,
     to: Unit.raw,
-  });
-  let acumulated_fees =
-    guesses?.values?.reduce((acc: BigNumber, guess: any) => {
-      const feeToAllocate =
-        TunedBigNumber(ENTRY_FEE_RAWS).multipliedBy(FEE_POOL_ALLOCATION);
-      return acc.plus(feeToAllocate);
-    }, TunedBigNumber(0)) || TunedBigNumber(0);
+  })
+  const acumulated_fees = TunedBigNumber(ENTRY_FEE_RAWS)
+    .multipliedBy(FEE_POOL_ALLOCATION)
+    .multipliedBy(guesses?.total || 0)
   const reward_raws = TunedBigNumber(base_reward_raws)
     .plus(acumulated_fees)
-    .toString();
+    .toString()
   const reward = toFixedSafe(
     convert(reward_raws, { from: Unit.raw, to: Unit.NANO }),
-    3
-  );
+    3,
+  )
 
   return (
     <Layout
@@ -72,7 +65,7 @@ export default function Home() {
             <a>
               <Button
                 style={{
-                  width: "150px",
+                  width: '150px',
                 }}
               >
                 <LockOpenIcon className="w-5 h-5 mr-2" />
@@ -83,7 +76,7 @@ export default function Home() {
         ) : (
           <Button
             style={{
-              width: "130px",
+              width: '130px',
             }}
             disabled
           >
@@ -114,14 +107,14 @@ export default function Home() {
             <h3
               className="text-2xl sm:text-3xl font-bold"
               style={{
-                textShadow: "0 0 5px #e2b731",
+                textShadow: '0 0 5px #e2b731',
               }}
             >
               {reward} XNO
             </h3>
             <div className="text-gray-300 mt-1 flex space-x-4">
-              <span>________</span>{" "}
-              <img src="/icons/laurel.png" className="-mt-2 w-12 sm:w-16" />{" "}
+              <span>________</span>{' '}
+              <img src="/icons/laurel.png" className="-mt-2 w-12 sm:w-16" />{' '}
               <span>________</span>
             </div>
           </div>
@@ -180,7 +173,7 @@ export default function Home() {
                   <div className="bg-gray-600 text-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                        {" "}
+                        {' '}
                         <InformationCircleIcon className="h-8 w-8 text-yellow-600" />
                       </div>
 
@@ -240,5 +233,5 @@ export default function Home() {
 
       <script src="/head.js" />
     </Layout>
-  );
+  )
 }
