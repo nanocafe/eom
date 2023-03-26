@@ -4,10 +4,9 @@ import Layout from 'components/Layout'
 import api from 'services/api'
 import { useEffect, useState } from 'react'
 import LeaderBoard from 'components/Leaderboard'
-import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/20/solid'
+import { LockClosedIcon, LockOpenIcon, NewspaperIcon } from '@heroicons/react/20/solid'
 import Button from 'components/Button'
 import {
-  ENTRY_FEE,
   ENTRY_FEE_RAWS,
   FEE_POOL_ALLOCATION,
   isLocked,
@@ -15,7 +14,6 @@ import {
 import { getCurrentMonthName, toFixedSafe } from 'utils'
 import { TunedBigNumber } from 'utils/nano'
 import { convert, Unit } from 'nanocurrency'
-import BigNumber from 'bignumber.js'
 import InformationCircleIcon from '@heroicons/react/24/outline/InformationCircleIcon'
 
 const DEFAULT_PAGINATION_LIMIT = 10
@@ -87,14 +85,20 @@ export default function Home() {
       }
     >
       <main className="p-2">
-        <div className="relative items-center">
+        <div className="mt-1 mb-4 flex items-center justify-between">
           <button
-            className="mt-4 mr-4 text-gold/80 hover:text-gold"
+            className="flex items-center space-x-1 text-gold/80 hover:text-gold"
             onClick={handleNotificationClick}
           >
-            <InformationCircleIcon className="h-8 w-8" />
+            <InformationCircleIcon className="h-5 w-5" />
             <span>How to play?</span>
           </button>
+          <Link href="/announcements">
+              <a className="flex items-center space-x-2 text-gold/80 hover:text-gold">
+                <NewspaperIcon className="h-5 w-5" />
+                <span>Announcements</span>
+              </a>
+            </Link>
         </div>
         <div
           id="prize-banner"

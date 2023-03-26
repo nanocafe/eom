@@ -68,12 +68,7 @@ export default function Navbar({ option }: NavbarProps) {
                   ${toFixedSafe(price.usd, MAX_DECIMALS)}
                 </div>
               </div>
-            )}{" "}
-            <Link href="/announcements">
-              <a className="px-2 py-1 text-gold/80 hover:text-gold">
-                Announcements
-              </a>
-            </Link>
+            )}
           </div>
           <CountdownViewer date={DEADLINE} />
         </div>
