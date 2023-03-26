@@ -44,7 +44,7 @@ export default function Transparency() {
     >
       <section className="my-2 py-6 px-2 border-b border-dim-gray">
         <h2 className="text-xl text-gold">Competition Rules and Guidelines</h2>
-        <p className="text-sm text-gray-200">Updated 23rd February 2023</p>
+        <p className="text-sm text-gray-200">Updated 26th March 2023</p>
         <div className="flex justify-center sm:justify-start mt-4">
           <a
             href="/docs/competition-rules-and-guidelines.pdf"

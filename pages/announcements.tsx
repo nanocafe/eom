@@ -16,6 +16,13 @@ const faqs = [
     details: (
       <ul>
         <li>
+          3/26/2023: Contest will be ending on the 31st, another announcement
+          will be made shortly after the March contest ends regarding the
+          winner, reward for next month along with when the contest is expected
+          to be open.
+        </li>
+        <br></br>
+        <li>
           3/10/2023: Due to some issues previously when contest opened, March is
           still mainly for testing and development. To accomodate for this, the
           days are now extended to allow additional entries until 3/15/2023. The
