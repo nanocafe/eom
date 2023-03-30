@@ -24,6 +24,13 @@ const faqs = [
           The winner is the person whose guess comes closest to the actual price
           of XNO at the end of that month.
         </li>
+        <br></br>
+        <li>
+          What makes EOM unique is that because of its' game mechanics, someone
+          has to win every month regardless of what the price of XNO is by
+          simply having the closest distance among all other players in the
+          contest.
+        </li>
       </ul>
     ),
   },
