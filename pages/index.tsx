@@ -1,59 +1,63 @@
-import Link from 'next/link'
-import { useQuery } from '@tanstack/react-query'
-import Layout from 'components/Layout'
-import api from 'services/api'
-import { useEffect, useState } from 'react'
-import LeaderBoard from 'components/Leaderboard'
-import { LockClosedIcon, LockOpenIcon, NewspaperIcon } from '@heroicons/react/20/solid'
-import Button from 'components/Button'
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import Layout from "components/Layout";
+import api from "services/api";
+import { useEffect, useState } from "react";
+import LeaderBoard from "components/Leaderboard";
 import {
-  ENTRY_FEE_RAWS,
-  FEE_POOL_ALLOCATION,
-  isLocked,
-} from 'config/config'
-import { getCurrentMonthName, toFixedSafe } from 'utils'
-import { TunedBigNumber } from 'utils/nano'
-import { convert, Unit } from 'nanocurrency'
-import InformationCircleIcon from '@heroicons/react/24/outline/InformationCircleIcon'
+  LockClosedIcon,
+  LockOpenIcon,
+  NewspaperIcon,
+} from "@heroicons/react/20/solid";
+import Button from "components/Button";
+import { ENTRY_FEE_RAWS, FEE_POOL_ALLOCATION, isLocked } from "config/config";
+import { getCurrentMonthName, toFixedSafe } from "utils";
+import { TunedBigNumber } from "utils/nano";
+import { convert, Unit } from "nanocurrency";
+import InformationCircleIcon from "@heroicons/react/24/outline/InformationCircleIcon";
 
-const DEFAULT_PAGINATION_LIMIT = 10
-const CURRENT_MONTH_BASE_REWARD = 56.84
+const DEFAULT_PAGINATION_LIMIT = 10;
+const CURRENT_MONTH_BASE_REWARD = 56.84;
 
 export default function Home() {
-  const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [showModal, setShowModal] = useState(false)
+  const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
 
   const handleModalClose = () => {
-    setShowModal(false)
-  }
+    setShowModal(false);
+  };
 
   const handleNotificationClick = () => {
-    setShowModal(true)
-  }
+    setShowModal(true);
+  };
 
-  const { data: guesses, isLoading, refetch } = useQuery(['guesses'], () =>
-    api.get(`/guesses?page=${currentPage}&limit=${limit}`),
-  )
+  const {
+    data: guesses,
+    isLoading,
+    refetch,
+  } = useQuery(["guesses"], () =>
+    api.get(`/guesses?page=${currentPage}&limit=${limit}`)
+  );
 
   useEffect(() => {
-    refetch()
-  }, [currentPage, limit])
+    refetch();
+  }, [currentPage, limit]);
 
   const base_reward_raws = convert(CURRENT_MONTH_BASE_REWARD.toString(), {
     from: Unit.NANO,
     to: Unit.raw,
-  })
+  });
   const acumulated_fees = TunedBigNumber(ENTRY_FEE_RAWS)
     .multipliedBy(FEE_POOL_ALLOCATION)
-    .multipliedBy(guesses?.total || 0)
+    .multipliedBy(guesses?.total || 0);
   const reward_raws = TunedBigNumber(base_reward_raws)
     .plus(acumulated_fees)
-    .toString()
+    .toString();
   const reward = toFixedSafe(
     convert(reward_raws, { from: Unit.raw, to: Unit.NANO }),
-    3,
-  )
+    3
+  );
 
   return (
     <Layout
@@ -63,7 +67,7 @@ export default function Home() {
             <a>
               <Button
                 style={{
-                  width: '150px',
+                  width: "150px",
                 }}
               >
                 <LockOpenIcon className="w-5 h-5 mr-2" />
@@ -74,7 +78,7 @@ export default function Home() {
         ) : (
           <Button
             style={{
-              width: '130px',
+              width: "130px",
             }}
             disabled
           >
@@ -94,11 +98,11 @@ export default function Home() {
             <span>How to play?</span>
           </button>
           <Link href="/announcements">
-              <a className="flex items-center space-x-2 text-gold/80 hover:text-gold">
-                <NewspaperIcon className="h-5 w-5" />
-                <span>Announcements</span>
-              </a>
-            </Link>
+            <a className="flex items-center space-x-2 text-gold/80 hover:text-gold">
+              <NewspaperIcon className="h-5 w-5" />
+              <span>Announcements</span>
+            </a>
+          </Link>
         </div>
         <div
           id="prize-banner"
@@ -111,14 +115,14 @@ export default function Home() {
             <h3
               className="text-2xl sm:text-3xl font-bold"
               style={{
-                textShadow: '0 0 5px #e2b731',
+                textShadow: "0 0 5px #e2b731",
               }}
             >
               {reward} XNO
             </h3>
             <div className="text-gray-300 mt-1 flex space-x-4">
-              <span>________</span>{' '}
-              <img src="/icons/laurel.png" className="-mt-2 w-12 sm:w-16" />{' '}
+              <span>________</span>{" "}
+              <img src="/icons/laurel.png" className="-mt-2 w-12 sm:w-16" />{" "}
               <span>________</span>
             </div>
           </div>
@@ -177,7 +181,7 @@ export default function Home() {
                   <div className="bg-gray-600 text-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                        {' '}
+                        {" "}
                         <InformationCircleIcon className="h-8 w-8 text-yellow-600" />
                       </div>
 
@@ -190,29 +194,28 @@ export default function Home() {
                         </h3>
                         <div className="mt-2">
                           <p className="text-sm">
-                            You have to make a guess at what the price of XNO
+                            You have to submit a guess at what the price of XNO
                             will be on the last day of the month, though before
-                            you can enter the contest, make sure you have either
-                            Nanobyte (desktop) or Nautilus (mobile) XNO wallet
-                            installed.
-                          </p>
-                          <br />
-                          <p className="text-sm">
-                            You can submit this guess by clicking the "Enter"
-                            button. This will take you to the submit screen.
-                            <br />
-                            <br />
-                            Then begin pasting your XNO reward address, your
-                            guess price and a name. After you do this, a pop-up
-                            will allow you to confirm your entry fee or Ask for
-                            permission to open Nautilus wallet to confirm the
-                            entry fee.
-                          </p>
-                          <br />
-                          <p className="text-sm">
-                            After the contest is locked, you wait till the final
-                            day of the month - if then you had the closest or
-                            exact price, you win the reward!
+                            you can enter the contest,
+                            <br></br>
+                            <br></br>
+                            1. Make sure you have either Nautilus (mobile) or
+                            Nanobyte (Desktop) installed.
+                            <br></br>
+                            <br></br>
+                            2. Have 0.05XNO in your wallet for the entry fee.
+                            <br></br>
+                            <br></br>
+                            3. Submit your guess by clicking the "Enter" Screen,
+                            when you submit your guess price a pop-up will
+                            request permission to either open Nautilus or
+                            Nanobyte.
+                            <br></br>
+                            <br></br>
+                            Finally, after the contest locks you just have to
+                            wait for the last day of the month to see if your
+                            guess is the closest or the exact match to win the
+                            reward!
                           </p>
                         </div>
                       </div>
@@ -237,5 +240,5 @@ export default function Home() {
 
       <script src="/head.js" />
     </Layout>
-  )
+  );
 }

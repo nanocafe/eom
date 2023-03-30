@@ -16,6 +16,17 @@ const faqs = [
     details: (
       <ul>
         <li>
+          3/29/2023: There is currently service disruption on the coinGecko API
+          which is causing the results on contest and price ticker to not
+          update, this will fix itself once the coinGecko API is running without
+          issues. More info available at{" "}
+          <a href="https://status.coingecko.com/" target="_blank">
+            here
+          </a>
+          .
+        </li>
+        <br></br>
+        <li>
           3/26/2023: Contest will be ending on the 31st, another announcement
           will be made shortly after the March contest ends regarding the
           winner, reward for next month along with when the contest is expected
