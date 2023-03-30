@@ -20,7 +20,7 @@ export default function Navbar({ option }: NavbarProps) {
 
   return (
     <nav className="w-full flex flex-col items-center">
-      <div className="w-full max-w-7xl flex justify-between items-center h-20 px-2 py-2 sm:py-0 sm:my-1">
+      <div className="w-full max-w-7xl flex justify-center sm:justify-between items-center h-20 px-2 py-2 sm:py-0 sm:my-1">
         <div className="flex space-x-2 h-full">
           <a href="/">
             <img src="icons/logo.png" className="logo-img h-full" />
