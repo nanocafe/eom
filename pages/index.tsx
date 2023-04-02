@@ -17,7 +17,9 @@ import { convert, Unit } from "nanocurrency";
 import InformationCircleIcon from "@heroicons/react/24/outline/InformationCircleIcon";
 
 const DEFAULT_PAGINATION_LIMIT = 10;
-const CURRENT_MONTH_BASE_REWARD = 56.84;
+
+// TODO: Consome it from another service
+const CURRENT_MONTH_BASE_REWARD = 119.44;
 
 export default function Home() {
   const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT);
