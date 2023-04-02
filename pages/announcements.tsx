@@ -16,6 +16,20 @@ const faqs = [
     details: (
       <ul>
         <li>
+          4/01/2023: Congratulations to the winner of the March contest, user
+          gargakk with a submitted guess price of $0.87 was the closest to the
+          final pulled price of $0.881! This guess was the closest in distance
+          by -0.011. Because this is a non-exact guess, the total won will be
+          37.74XNO (57.19 * 66%). The remainder 19.44XNO (57.19 * 34%) will be
+          used for April's contest. The payout will be made within 1-2 days
+          after reviewing.
+          <br></br>
+          <br></br>
+          The April contest will be shortly reflected on the homepage and more
+          details will be available sometime later today.
+        </li>
+        <br></br>
+        <li>
           3/29/2023: There is currently service disruption on the coinGecko API
           which is causing the results on contest and price ticker to not
           update, this will fix itself once the coinGecko API is running without
