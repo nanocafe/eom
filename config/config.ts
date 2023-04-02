@@ -19,6 +19,13 @@ export const COIN_ID = 'nano';
 
 export const CONVERT_SYMBOL = "usd";
 
+export const OPENING = new Date(new Date().setUTCDate(OPEN_DAY)).setUTCHours(
+    0,
+    0,
+    0,
+    0
+);
+
 export const DEADLINE = new Date(new Date().setUTCDate(CLOSE_DAY)).setUTCHours(
     23,
     59,

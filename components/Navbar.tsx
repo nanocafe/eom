@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { CONVERT_SYMBOL, DEADLINE } from "config/config";
-import { DEFAULT_CLOSE_DAY, MAX_DECIMALS } from "core/constants";
-import Link from "next/link";
+import { DEADLINE, OPENING } from "config/config";
+import { MAX_DECIMALS } from "core/constants";
 import { ReactNode } from "react";
 import API from "services/api";
 import { classNames, toFixedSafe } from "utils";
-import CountdownViewer from "./CountdownViewer";
+import CompetitionCountdown from "./CompetitionCountdown";
 
 export interface NavbarProps {
   option?: ReactNode | string;
@@ -70,7 +69,7 @@ export default function Navbar({ option }: NavbarProps) {
               </div>
             )}
           </div>
-          <CountdownViewer date={DEADLINE} />
+          <CompetitionCountdown opening={OPENING} deadline={DEADLINE} />
         </div>
       </div>
     </nav>
