@@ -1,53 +1,52 @@
-import Layout from 'components/Layout'
-import Link from 'next/link'
-import Counter from 'components/Counter'
-import api from 'services/api'
-import React, { useState } from 'react'
-import { button as checkout } from '@nanobyte-crypto/checkout'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import ErrorAlert from 'components/Alert'
-import { Controller, useForm } from 'react-hook-form'
-import Input from 'components/Input'
-import Button from 'components/Button'
+import Layout from "components/Layout";
+import Link from "next/link";
+import Counter from "components/Counter";
+import api from "services/api";
+import React, { useState } from "react";
+import { button as checkout } from "@nanobyte-crypto/checkout";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import ErrorAlert from "components/Alert";
+import { Controller, useForm } from "react-hook-form";
+import Input from "components/Input";
+import Button from "components/Button";
 import {
   ArrowLeftCircleIcon,
   CheckCircleIcon,
   HomeIcon,
   ExclamationCircleIcon,
-} from '@heroicons/react/20/solid'
+} from "@heroicons/react/20/solid";
 import {
   MAX_GUESS_PRICE,
   MAX_NICKNAME_LENGTH,
   MIN_GUESS_PRICE,
   MIN_NICKNAME_LENGTH,
   STEP_GUESS_PRICE,
-} from 'core/constants'
-import { checkAddress } from 'nanocurrency'
-import { ENTRY_FEE, ENTRY_FEE_RAWS, isLocked } from 'config/config'
-
+} from "core/constants";
+import { checkAddress } from "nanocurrency";
+import { ENTRY_FEE, ENTRY_FEE_RAWS, isLocked } from "config/config";
 
 interface IFormData {
-  nickname: string
-  address: string
-  price: number
+  nickname: string;
+  address: string;
+  price: number;
 }
 
 export default function Enter() {
-  const [paymentId, setPaymentId] = useState<string>('')
-  const [paymentPending, setPaymentPending] = useState<boolean>(false)
+  const [paymentId, setPaymentId] = useState<string>("");
+  const [paymentPending, setPaymentPending] = useState<boolean>(false);
 
-  const paymentButtonRef = React.useRef<HTMLButtonElement>(null)
+  const paymentButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const { data: guesses, isLoading: isGuessesLoading } = useQuery(
-    ['guesses'],
-    () => api.get('guesses'),
+    ["guesses"],
+    () => api.get("guesses"),
     {
       refetchInterval: 5000,
-    },
-  )
-  const { data: price, isLoading: isPriceLoading } = useQuery(['price'], () =>
-    api.get('/price'),
-  )
+    }
+  );
+  const { data: price, isLoading: isPriceLoading } = useQuery(["price"], () =>
+    api.get("/price")
+  );
 
   const {
     mutate: postGuess,
@@ -57,90 +56,90 @@ export default function Enter() {
     isError,
   } = useMutation({
     mutationFn: (paymentId: string) =>
-      api.post('/guesses', {
+      api.post("/guesses", {
         paymentId,
       }),
-  })
+  });
 
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
   } = useForm<IFormData>({
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
-      nickname: '',
-      address: '',
+      nickname: "",
+      address: "",
       price: 0,
     },
-  })
+  });
 
   const {
     isInitialLoading: preCheckoutInitialLoading,
     isRefetching: preCheckoutRefetching,
     error: preCheckoutError,
     refetch: makePreCheckout,
-  } = useQuery(['pre-checkout'], () => api.post('/pre-checkout'), {
+  } = useQuery(["pre-checkout"], () => api.post("/pre-checkout"), {
     cacheTime: 0,
     enabled: false,
     refetchOnWindowFocus: false,
     retry: false,
     onSuccess: () => {
       if (paymentButtonRef.current) {
-        setPaymentPending(true)
-        paymentButtonRef.current.click()
+        setPaymentPending(true);
+        paymentButtonRef.current.click();
       } else {
-        alert('Something went wrong, please try again later.')
+        alert("Something went wrong, please try again later.");
       }
     },
-  })
+  });
 
   // Hack isLoading for react-query v4 with "enabled: false"
   // Read more: https://github.com/TanStack/query/issues/3584#issuecomment-1369491188
   const isPreCheckoutLoading =
-    preCheckoutRefetching || preCheckoutInitialLoading
+    preCheckoutRefetching || preCheckoutInitialLoading;
 
   const onSubmit = async (data: IFormData) => {
-    await makePreCheckout()
+    await makePreCheckout();
 
     checkout.init(
-      process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || '',
+      process.env.NEXT_PUBLIC_CHECKOUT_API_KEY || "",
       async ({ paymentStatus, paymentId }) => {
         // this callback will be called when a payment has been completed
-        if (paymentStatus === 'confirmed') {
-          setPaymentId(paymentId)
-          postGuess(paymentId)
-        } else if (paymentStatus === 'cancelled') {
-          console.warn('Payment cancelled')
+        if (paymentStatus === "confirmed") {
+          setPaymentId(paymentId);
+          postGuess(paymentId);
+        } else if (paymentStatus === "cancelled") {
+          console.warn("Payment cancelled");
         } else {
-          alert('Something went wrong, please try again later.')
+          alert("Something went wrong, please try again later.");
         }
-        setPaymentPending(false)
-      },
-    )
+        setPaymentPending(false);
+      }
+    );
 
     checkout.setRequiredFields(
-      ['userNickname', 'userNanoAddress', 'userGuessPrice'],
+      ["userNickname", "userNanoAddress", "userGuessPrice"],
       (data) => {
         // This callback will be called if the user clicks trys to make a payment without the required fields
-        alert(data)
-      },
-    )
+        alert(data);
+      }
+    );
 
     await checkout.setInterceptClick(async () => {
       return {
         amount: ENTRY_FEE_RAWS,
-        label: 'End Of Month Guess',
-        message: 'Thank you!',
+        label: "End Of Month Guess",
+        message: "Thank you!",
         userNickname: data.nickname,
         userNanoAddress: data.address,
         userGuessPrice: data.price,
-      }
-    })
-  }
+      };
+    });
+  };
 
   if (isGuessesLoading || isPriceLoading) {
-    return <Skeleton />
+    return <Skeleton />;
   }
 
   return (
@@ -150,7 +149,7 @@ export default function Enter() {
           <a>
             <Button
               style={{
-                width: '100px',
+                width: "100px",
               }}
             >
               <HomeIcon className="w-5 h-5 mr-2" />
@@ -171,13 +170,19 @@ export default function Enter() {
         </div>
 
         {isLocked() ? (
-          <ErrorAlert title="EOM is currently closed for entry!" messages={["This month's contest is locked.", "It ends on the last day of the month and it re-opens within the first few days of the next month."]} />
+          <ErrorAlert
+            title="EOM is currently closed for entry!"
+            messages={[
+              "This month's contest is locked.",
+              "It ends on the last day of the month and it re-opens within the first few days of the next month.",
+            ]}
+          />
         ) : (
           <div className="w-full flex justify-center">
             <div
               className="w-full max-w-2xl shadow overflow-hidden rounded-md p-4"
               style={{
-                backgroundColor: '#3e3e3e',
+                backgroundColor: "#3e3e3e",
               }}
             >
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -187,7 +192,7 @@ export default function Enter() {
                       name="price"
                       control={control}
                       rules={{
-                        required: 'A Price Guess is required!',
+                        required: "A Price Guess is required!",
                         min: {
                           value: MIN_GUESS_PRICE,
                           message: `Price Guess must be at least ${MIN_GUESS_PRICE}`,
@@ -199,19 +204,19 @@ export default function Enter() {
                         validate: {
                           isNumber: (value) => {
                             if (isNaN(value)) {
-                              return 'Price Guess must be a number!'
+                              return "Price Guess must be a number!";
                             }
-                            return true
+                            return true;
                           },
                           isUnique: (value) => {
                             if (
                               guesses?.values?.find(
-                                (guess: any) => guess.price === value,
+                                (guess: any) => guess.price === value
                               )
                             ) {
-                              return 'Someone already guessed this Price Guess!'
+                              return "Someone already guessed this Price Guess!";
                             }
-                            return true
+                            return true;
                           },
                         },
                       }}
@@ -235,7 +240,7 @@ export default function Enter() {
                       name="nickname"
                       control={control}
                       rules={{
-                        required: 'A Name is required',
+                        required: "A Name is required",
                         minLength: {
                           value: MIN_NICKNAME_LENGTH,
                           message: `Name must be at least ${MIN_NICKNAME_LENGTH} characters`,
@@ -247,21 +252,21 @@ export default function Enter() {
                         pattern: {
                           value: /^[a-z0-9_]*$/,
                           message:
-                            'Name must be alphanumeric (a-z, 0-9) and lowercase',
+                            "Name must be alphanumeric (a-z, 0-9) and lowercase",
                         },
                         validate: {
                           isUnique: (value) => {
                             if (!value) {
-                              return true
+                              return true;
                             }
                             if (
                               guesses?.values?.find(
-                                (guess: any) => guess.nickname === value,
+                                (guess: any) => guess.nickname === value
                               )
                             ) {
-                              return 'This Name is already taken!'
+                              return "This Name is already taken!";
                             }
-                            return true
+                            return true;
                           },
                         },
                       }}
@@ -284,26 +289,26 @@ export default function Enter() {
                       name="address"
                       control={control}
                       rules={{
-                        required: 'An XNO address is required!',
+                        required: "An XNO address is required!",
                         validate: {
                           isNanoAddress: (value) => {
                             if (checkAddress(value)) {
-                              return true
+                              return true;
                             }
-                            return 'Invalid XNO address'
+                            return "Invalid XNO address";
                           },
                           isUnique: (value) => {
                             if (!value) {
-                              return true
+                              return true;
                             }
                             if (
                               guesses?.values?.find(
-                                (guess: any) => guess.address === value,
+                                (guess: any) => guess.address === value
                               )
                             ) {
-                              return 'Address already exists in this round!'
+                              return "Address already exists in this round!";
                             }
-                            return true
+                            return true;
                           },
                         },
                       }}
@@ -344,9 +349,13 @@ export default function Enter() {
                   ) : error ? (
                     <>
                       <ErrorAlert
-                        title={`Payment Error: ${typeof error === 'string' ? error : JSON.stringify(error)}`}
+                        title={`Payment Error: ${
+                          typeof error === "string"
+                            ? error
+                            : JSON.stringify(error)
+                        }`}
                         messages={[
-                          'Save your payment id and contact support if you think this is a mistake',
+                          "Save your payment id and contact support if you think this is a mistake",
                         ]}
                       />
                       {paymentId && (
@@ -380,28 +389,45 @@ export default function Enter() {
                       }
                     >
                       {paymentPending
-                        ? 'Waiting for payment...'
+                        ? "Waiting for payment..."
                         : isPosting
-                        ? 'Submiting...'
+                        ? "Submiting..."
                         : isPreCheckoutLoading
-                        ? 'Processing...'
-                        : 'Submit'}
+                        ? "Processing..."
+                        : "Submit"}
                     </Button>
                   )}
                 </div>
               </form>
-              <div style={{textAlign:'center'}}>
+              <div style={{ textAlign: "center" }}>
                 <ExclamationCircleIcon className="h-6 w-6"></ExclamationCircleIcon>
-                <p>Entry Fee: {ENTRY_FEE} XNO | Currently only supports submissions through <a href="https://chrome.google.com/webstore/detail/nanobyte/ndkdijcnlhjhmakblkhmpjocfjjifhbo" className="text-gold hover:underline"> Nanobyte</a>.
+                <p>
+                  Entry Fee: {ENTRY_FEE} XNO | Currently only supports
+                  submissions through{" "}
+                  <a
+                    href="https://nautilus.io/"
+                    className="text-gold hover:underline"
+                  >
+                    {" "}
+                    Nautilus
+                  </a>{" "}
+                  (Mobile) and{" "}
+                  <a
+                    href="https://chrome.google.com/webstore/detail/nanobyte/ndkdijcnlhjhmakblkhmpjocfjjifhbo"
+                    className="text-gold hover:underline"
+                  >
+                    {" "}
+                    Nanobyte
+                  </a>{" "}
+                  (Desktop).
                 </p>
               </div>
             </div>
           </div>
-          
         )}
       </main>
     </Layout>
-  )
+  );
 }
 
 const Skeleton = () => {
@@ -412,7 +438,7 @@ const Skeleton = () => {
           <a>
             <Button
               style={{
-                width: '100px',
+                width: "100px",
               }}
             >
               <HomeIcon className="w-5 h-5 mr-2" />
@@ -436,7 +462,7 @@ const Skeleton = () => {
           <div
             className="w-full max-w-2xl flex flex-col space-y-6 shadow rounded-md p-4"
             style={{
-              backgroundColor: '#3e3e3e',
+              backgroundColor: "#3e3e3e",
             }}
           >
             <div className="w-full h-16 bg-dim-gray rounded loading" />
@@ -446,5 +472,5 @@ const Skeleton = () => {
         </div>
       </main>
     </Layout>
-  )
-}
+  );
+};

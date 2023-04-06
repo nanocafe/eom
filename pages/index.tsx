@@ -201,8 +201,25 @@ export default function Home() {
                             you can enter the contest,
                             <br></br>
                             <br></br>
-                            1. Make sure you have either Nautilus (mobile) or
-                            Nanobyte (Desktop) installed.
+                            1. Make sure you have either{" "}
+                            <a
+                              href="https://nautilus.io/"
+                              target="_blank"
+                              className="text-gold hover:underline"
+                            >
+                              {" "}
+                              Nautilus
+                            </a>{" "}
+                            (mobile) or<br></br>
+                            <a
+                              href="https://chrome.google.com/webstore/detail/nanobyte/ndkdijcnlhjhmakblkhmpjocfjjifhbo"
+                              target="_blank"
+                              className="text-gold hover:underline"
+                            >
+                              Nanobyte
+                            </a>
+                            {"  "}
+                            (Desktop) installed. <p></p>
                             <br></br>
                             <br></br>
                             2. Have 0.05XNO in your wallet for the entry fee.
@@ -211,13 +228,13 @@ export default function Home() {
                             3. Submit your guess by clicking the "Enter" Screen,
                             when you submit your guess price a pop-up will
                             request permission to either open Nautilus or
-                            Nanobyte.
+                            Nanobyte; give it a few seconds.
                             <br></br>
                             <br></br>
-                            Finally, after the contest locks you just have to
+                            Finally, after the contest closes for entries - you
                             wait for the last day of the month to see if your
-                            guess is the closest or the exact match to win the
-                            reward!
+                            guess is the closest in distance to the price of XNO
+                            to win.
                           </p>
                         </div>
                       </div>

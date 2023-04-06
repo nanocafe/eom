@@ -41,9 +41,13 @@ const faqs = [
         <li>• EOM is a monthly contest.</li>
         <br></br>
         <li>
-          • You may enter the contest from the 1st of each month until the 7th.
-          After the seventh of the month, EOM gets closed and no additional
-          players may enter.
+          • You may enter the contest from the 1st of each month until the 7th
+          (subject to change).
+        </li>
+        <br></br>
+        <li>
+          • After the last day for entries, EOM gets closed and no additional
+          players may enter the contest.
         </li>
       </ul>
     ),
@@ -94,7 +98,12 @@ const faqs = [
   },
   {
     summary: <h2>How much does it cost to participate in EOM?</h2>,
-    details: <p>The current entry fee for March 2023 is 0.05XNO.</p>,
+    details: (
+      <p>
+        The current entry fee for April 2023 is 0.05XNO.<br></br>50% (0.025XNO)
+        of this entry fee gets added to increase current reward.
+      </p>
+    ),
   },
   {
     summary: <h2>What is the Entry Fee used for?</h2>,
@@ -133,6 +142,15 @@ const faqs = [
           <a className="text-gold hover:underline">here</a>
         </Link>
         .
+      </p>
+    ),
+  },
+  {
+    summary: <h2>Contact</h2>,
+    details: (
+      <p>
+        You can email saizo@nanocafe.cc for any help, questions, suggestions or
+        all other inquiries.
       </p>
     ),
   },
