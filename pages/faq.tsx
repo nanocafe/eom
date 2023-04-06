@@ -98,7 +98,12 @@ const faqs = [
   },
   {
     summary: <h2>How much does it cost to participate in EOM?</h2>,
-    details: <p>The current entry fee for March 2023 is 0.05XNO.</p>,
+    details: (
+      <p>
+        The current entry fee for April 2023 is 0.05XNO.<br></br>50% (0.025XNO)
+        of this entry fee gets added to increase current reward.
+      </p>
+    ),
   },
   {
     summary: <h2>What is the Entry Fee used for?</h2>,
