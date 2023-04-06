@@ -16,6 +16,17 @@ const faqs = [
     details: (
       <ul>
         <li>
+          4/06/2023: The contest is available to enter for April starting today
+          4/06/2023 - 4/15/2023. You can only enter via nautilus (mobile) or
+          Nanobyte (desktop). Possibly there will be a new payment processor
+          added later on to allow for payments via alternative processor.
+          <br></br>
+          <br></br>
+          Contest details, <br></br>Reward: 119.44XNO Base <br></br>Entry Fee:
+          0.05XNO
+        </li>
+        <br></br>
+        <li>
           4/01/2023: Congratulations to the winner of the March contest, user
           gargakk with a submitted guess price of $0.87 was the closest to the
           final pulled price of $0.881! This guess was the closest in distance
@@ -29,31 +40,6 @@ const faqs = [
           details will be available sometime later today.
         </li>
         <br></br>
-        <li>
-          3/29/2023: There is currently service disruption on the coinGecko API
-          which is causing the results on contest and price ticker to not
-          update, this will fix itself once the coinGecko API is running without
-          issues. More info available at{" "}
-          <a href="https://status.coingecko.com/" target="_blank">
-            here
-          </a>
-          .
-        </li>
-        <br></br>
-        <li>
-          3/26/2023: Contest will be ending on the 31st, another announcement
-          will be made shortly after the March contest ends regarding the
-          winner, reward for next month along with when the contest is expected
-          to be open.
-        </li>
-        <br></br>
-        <li>
-          3/10/2023: Due to some issues previously when contest opened, March is
-          still mainly for testing and development. To accomodate for this, the
-          days are now extended to allow additional entries until 3/15/2023. The
-          only way to enter currently is through the nanobyte (desktop) or
-          nautilus (mobile-android) wallets.
-        </li>
       </ul>
     ),
   },
