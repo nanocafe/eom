@@ -111,11 +111,11 @@ const faqs = [
       <ul>
         <li>• 50% to increase the current available reward.</li>
         <br></br>
-        <li>• 33% to help with expenses for maintenance & operations.</li>
-        <br></br>
-        <li>• 7% to fund XNO community initiatives.</li>
+        <li>• 35% to help with expenses for maintenance & operations.</li>
         <br></br>
         <li>• 10% to help for development.</li>
+        <br></br>
+        <li>• 5% to fund XNO community initiatives.</li>
       </ul>
     ),
   },
@@ -123,13 +123,16 @@ const faqs = [
     summary: <h2>Where and when is the price of XNO pulled from?</h2>,
     details: (
       <p>
-        The price is pulled from the coinGecko{" "}
-        <a href="https://www.coingecko.com/en/coins/nano" target="_blank">
-          API
-        </a>
+        The price is pulled from the{" "}
+        <Link href="https://www.coingecko.com/en/coins/nano">
+          <a className="text-gold hover:underline" target="_blank">
+            {" "}
+            coinGecko API
+          </a>
+        </Link>
         . <br />
-        It is requested at the last day of the month and typically is available
-        between 4:55AM – 5:05AM UTC. <br />
+        It is requested during the last day of the month and typically is
+        available between 4:55AM – 5:05AM UTC. <br />
       </p>
     ),
   },
@@ -139,7 +142,9 @@ const faqs = [
       <p>
         You can download and view the full rules and guidelines{" "}
         <Link href="/docs/competition-rules-and-guidelines.pdf">
-          <a className="text-gold hover:underline">here</a>
+          <a className="text-gold hover:underline" target="_blank">
+            here
+          </a>
         </Link>
         .
       </p>

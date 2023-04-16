@@ -16,30 +16,57 @@ const faqs = [
     details: (
       <ul>
         <li>
-          4/06/2023: The contest is available to enter for April starting today
-          4/06/2023 - 4/15/2023. You can only enter via nautilus (mobile) or
-          Nanobyte (desktop). Possibly there will be a new payment processor
-          added later on to allow for payments via alternative processor.
+          4/16/2023: The April 2023 EOM contest is now officially locked, no new
+          entries can be made and the winner will be decided on the final day of
+          the month. The official reward is 120.015XNO available.
           <br></br>
-          <br></br>
-          Contest details, <br></br>Reward: 119.44XNO Base <br></br>Entry Fee:
-          0.05XNO
         </li>
         <br></br>
         <li>
-          4/01/2023: Congratulations to the winner of the March contest, user
-          gargakk with a submitted guess price of $0.87 was the closest to the
-          final pulled price of $0.881! This guess was the closest in distance
-          by -0.011. Because this is a non-exact guess, the total won will be
-          37.74XNO (57.19 * 66%). The remainder 19.44XNO (57.19 * 34%) will be
-          used for April's contest. The payout will be made within 1-2 days
-          after reviewing.
-          <br></br>
-          <br></br>
-          The April contest will be shortly reflected on the homepage and more
-          details will be available sometime later today.
+          Currently XNO.BET is very behind on features and looking for
+          additional help, if you (or anyone you know) are familiar with
+          Typescript and interested in helping out <br></br>(will get paid in
+          XNO) please contact saizo@nanocafe.cc or you can see the bounty below
+          available for different tasks.
         </li>
         <br></br>
+        <li>XNO.BET Current Bounty (listed by difficulty)</li>
+        <br></br>
+        <li>
+          1. Fix search bar so users can search a guess by either name or guess
+          price. (20XNO)
+        </li>
+        <li>
+          2. Display the distance of each guess to the current price of XNO on
+          each row besides the $ Price Guessed (+/-). (20XNO)
+        </li>
+        <li>
+          3. Display what the total XNO reward was for the given month on the
+          transparency page & also the real reward won by the winner. (15XNO)
+        </li>
+        <li>
+          4. Add a ticker box before a user can click the submit button on the
+          Enter screen; can be a pop up or a link to Rules & Guidelines. (10XNO)
+        </li>
+        <li>
+          5. Add a $ value for the reward in the home screen & the cost of the
+          entry fee in $ on the Enter screen. (10 XNO)
+        </li>
+        <li>
+          6. Add a countdown timer for after contest gets locked displaying time
+          till end of the month. (10 XNO)
+        </li>
+        <br></br>
+        <li>
+          To submit a bounty, simply go to XNO.BET's{" "}
+          <Link href="https://github.com/nanocafe/eom">
+            <a className="text-gold hover:underline" target="_blank">
+              Github
+            </a>
+          </Link>{" "}
+          and create a pull request with your updated code along with the task #
+          & XNO address on the description.
+        </li>
       </ul>
     ),
   },
