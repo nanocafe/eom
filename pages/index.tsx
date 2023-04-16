@@ -196,39 +196,21 @@ export default function Home() {
                         </h3>
                         <div className="mt-2">
                           <p className="text-sm">
-                            You have to submit a guess at what the price of XNO
-                            will be on the last day of the month, though before
-                            you can enter the contest,
+                            You have to submit a guess at you think will be the
+                            price of XNO at the end of the month.
                             <br></br>
                             <br></br>
-                            1. Make sure you have either{" "}
-                            <a
-                              href="https://nautilus.io/"
-                              target="_blank"
-                              className="text-gold hover:underline"
-                            >
-                              {" "}
-                              Nautilus
-                            </a>{" "}
-                            (mobile) or<br></br>
-                            <a
-                              href="https://chrome.google.com/webstore/detail/nanobyte/ndkdijcnlhjhmakblkhmpjocfjjifhbo"
-                              target="_blank"
-                              className="text-gold hover:underline"
-                            >
-                              Nanobyte
-                            </a>
-                            {"  "}
-                            (Desktop) installed. <p></p>
+                            1. Make sure you have an XNO wallet that has a
+                            sufficient balance to submit a guess (0.05XNO
+                            currently).
                             <br></br>
                             <br></br>
-                            2. Have 0.05XNO in your wallet for the entry fee.
+                            2. Click the enter page and fill in your entry
+                            submission details.
                             <br></br>
                             <br></br>
-                            3. Submit your guess by clicking the "Enter" Screen,
-                            when you submit your guess price a pop-up will
-                            request permission to either open Nautilus or
-                            Nanobyte; give it a few seconds.
+                            3. Submit your guess by clicking the "Enter" which
+                            should pop up a pay submission.
                             <br></br>
                             <br></br>
                             Finally, after the contest closes for entries - you

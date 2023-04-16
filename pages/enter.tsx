@@ -173,8 +173,8 @@ export default function Enter() {
           <ErrorAlert
             title="EOM is currently closed for entry!"
             messages={[
-              "This month's contest is locked.",
-              "It ends on the last day of the month and it re-opens within the first few days of the next month.",
+              "The contest is currently locked for this month.",
+              "It ends on the last day of the month after a winner has been selected and reopens shortly after within the next few days.",
             ]}
           />
         ) : (
@@ -401,26 +401,7 @@ export default function Enter() {
               </form>
               <div style={{ textAlign: "center" }}>
                 <ExclamationCircleIcon className="h-6 w-6"></ExclamationCircleIcon>
-                <p>
-                  Entry Fee: {ENTRY_FEE} XNO | Currently only supports
-                  submissions through{" "}
-                  <a
-                    href="https://nautilus.io/"
-                    className="text-gold hover:underline"
-                  >
-                    {" "}
-                    Nautilus
-                  </a>{" "}
-                  (Mobile) and{" "}
-                  <a
-                    href="https://chrome.google.com/webstore/detail/nanobyte/ndkdijcnlhjhmakblkhmpjocfjjifhbo"
-                    className="text-gold hover:underline"
-                  >
-                    {" "}
-                    Nanobyte
-                  </a>{" "}
-                  (Desktop).
-                </p>
+                <p>Entry Fee: {ENTRY_FEE} XNO</p>
               </div>
             </div>
           </div>
