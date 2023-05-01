@@ -19,7 +19,7 @@ import InformationCircleIcon from "@heroicons/react/24/outline/InformationCircle
 const DEFAULT_PAGINATION_LIMIT = 10;
 
 // TODO: Consome it from another service
-const CURRENT_MONTH_BASE_REWARD = 119.44;
+const CURRENT_MONTH_BASE_REWARD = 140.80 ;
 
 export default function Home() {
   const [limit, setLimit] = useState(DEFAULT_PAGINATION_LIMIT);
